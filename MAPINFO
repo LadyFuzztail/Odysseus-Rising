@@ -1,0 +1,6 @@
+Gameinfo
+{
+	StatusBarClass = "YggdrasilHUD"
+	PlayerClasses = "ProtoPossPawn","CommandoPawn"
+	AddEventHandlers = "ShieldHandler"
+}
