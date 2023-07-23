@@ -11,7 +11,7 @@ class YggdrasilHUD : BaseStatusBar
 		super.Init();
 		
 		interpHP = DynamicValueInterpolator.Create(0,0.5,1,10);
-		interpSP = DynamicValueInterpolator.Create(0,0.25,1,5);
+		interpSP = DynamicValueInterpolator.Create(0,0.5,1,10);
 		hpFrac = 0.;
 		spFrac = 0.;
 	}
@@ -42,6 +42,10 @@ class YggdrasilHUD : BaseStatusBar
 		DrawImage("SPBORDER",(0,32),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
 		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),207,(0,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
 		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),207,(0,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
+		if ( CheckInventory("ShieldGate") ) {
+			DrawBar("SGBAR","SGBAROFF",interpSP.GetValue(),207,(0,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,1.0);
+			DrawBar("SGBAR","SGBAROFF",interpSP.GetValue(),207,(0,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,1.0);
+		}
 	}
 	
 	override void Tick()
@@ -52,7 +56,7 @@ class YggdrasilHUD : BaseStatusBar
 		hpFrac = (151. / CPlayer.mo.GetMaxHealth()) * CPlayer.Health;
 		int hpPix = round(hpFrac);
 		interpHP.Update(hpPix);
-//		URPlayer player = URPlayer(CPlayer.mo);
+		
 		if (player) {
 			spFrac = (207. / player.ShieldMax) * GetAmount("ShieldPoints");
 			int spPix = round(spFrac);
