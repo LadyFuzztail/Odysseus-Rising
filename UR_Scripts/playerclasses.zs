@@ -56,12 +56,89 @@ class CommandoPawn : URPlayer
 	}
 }
 
-class ShieldHandler : EventHandler
+class StartItemHandler : EventHandler
 {
 	override void WorldThingSpawned(WorldEvent e)
 	{
 		if (e.thing.player && !e.thing.FindInventory("ShieldControl"))
 			e.thing.GiveInventory("ShieldControl",1);
+		if (e.thing.player && !e.thing.FindInventory("ArmorControl"))
+			e.thing.GiveInventory("ArmorControl",1);
+	}
+}
+
+class ArmorControl : Inventory
+{
+	double damageReduction;
+	int drPercent;
+	int currAP;
+	URPlayer plr;
+	
+	Default
+	{
+		Inventory.MaxAmount		1;
+		+Inventory.Undroppable
+		+Inventory.Untossable
+	}
+	
+	override void AttachToOwner(Actor other)
+	{
+		super.AttachToOwner(other);
+		plr = URPlayer(owner);
+		if (!owner)
+			return;
+		damageReduction = 0.;
+		drPercent = 0;
+		currAP = 0;
+	}
+	
+	override void DoEffect()
+	{
+		super.DoEffect();
+		if (!owner || owner.player.health <= 0)
+			return;
+		if (owner is "URPlayer")
+		{
+			UpdateArmor();
+		}
+	}
+	
+	void UpdateArmor()
+	{
+		if (!owner || owner.player.health <= 0) {
+			damageReduction = 0.;
+			drPercent = 0;
+			return;
+		}
+		if (owner.FindInventory("BasicArmor")){
+			int armorToTransfer = owner.CountInv("BasicArmor");
+			owner.GiveInventory("ArmorPoints",armorToTransfer);
+			owner.TakeInventory("BasicArmor",armorToTransfer);
+		}
+		currAP = owner.CountInv("ArmorPoints");
+		if (currAP > plr.armorMax) {
+			owner.TakeInventory("ArmorPoints", currAP - plr.armorMax);
+			currAP = plr.armorMax;
+		}
+		damageReduction = 1. - (100. / (100 + plr.armorBase + owner.CountInv("ArmorPoints")));
+		drPercent = round(damageReduction * 100);
+	}
+	
+	override void AbsorbDamage(int damage, Name damageType, out int newdamage, Actor inflictor, Actor source,int flags)
+	{	
+		int absorbedDamage;
+		
+		currAP = owner.CountInv("ArmorPoints");
+		if (!DamageTypeDefinition.IgnoreArmor(damageType))
+		{
+			absorbedDamage = int(damage * damageReduction);
+			if (currAP < absorbedDamage) {
+				absorbedDamage = currAP;
+			}
+			newdamage = damage - absorbedDamage;
+			owner.TakeInventory("ArmorPoints",absorbedDamage);
+			UpdateArmor();
+		}
 	}
 }
 
@@ -175,5 +252,16 @@ class ShieldGate : Inventory
 		Inventory.MaxAmount		1;
 		+Inventory.Undroppable
 		+Inventory.Untossable
+	}
+}
+
+class ArmorPoints : Inventory
+{
+	Default
+	{
+		Inventory.MaxAmount		9999;
+		+Inventory.Undroppable
+		+Inventory.Untossable
+		+Inventory.KeepDepleted
 	}
 }
