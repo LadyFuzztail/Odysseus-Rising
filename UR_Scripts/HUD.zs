@@ -1,30 +1,30 @@
 class YggdrasilHUD : BaseStatusBar
 {
-	HUDFont astraFont;
+	HUDFont yggdraFont;
 	DynamicValueInterpolator interpSP;
 	DynamicValueInterpolator interpHP;
 	DynamicValueInterpolator interpAC;
-//	DynamicValueInterpolator interpAP;
+	DynamicValueInterpolator interpAP;
 	URPlayer player;
 	double spFrac;
 	double hpFrac;
 	double acFrac;
-//	int apNum;
+	int apNum;
 	
 	override void Init()
 	{
 		super.Init();
 		
-		font astraSmall = "astrasml";
-		astraFont = HUDFont.Create(astraSmall,0,0,2,2);
+		font yggdraSmall = "yggsmall";
+		yggdraFont = HUDFont.Create(yggdraSmall,0,0,2,2);
 		interpSP = DynamicValueInterpolator.Create(0,0.5,1,20);
 		interpHP = DynamicValueInterpolator.Create(0,0.5,1,15);
 		interpAC = DynamicValueInterpolator.Create(0,0.5,1,15);
-//		interpAP = DynamicValueInterpolator.Create(0,0.5,1,15);
+		interpAP = DynamicValueInterpolator.Create(0,0.5,1,15);
 		spFrac = 0.;
 		hpFrac = 0.;
 		acFrac = 0.;
-//		apNum = 0.;
+		apNum = 0.;
 	}
 	
 	override void Draw(int state, double TicFrac)
@@ -60,7 +60,7 @@ class YggdrasilHUD : BaseStatusBar
 		// AC Bar
 		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),153,(0,47),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
 		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),153,(0,47),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
-//		DrawString(astraFont,FormatNumber(interpAP.GetValue(),3),(-16,64),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT);
+//		DrawString(yggdraFont,FormatNumber(interpAP.GetValue(),3),(-147,51),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(0.5,0.5));
 	}
 	
 	override void Tick()
@@ -81,8 +81,8 @@ class YggdrasilHUD : BaseStatusBar
 			int acPix = round(acFrac);
 			interpAC.Update(acPix);
 		
-//			apNum = GetAmount("ArmorPoints");
-//			interpAP.Update(apNum);
+			apNum = GetAmount("ArmorPoints");
+			interpAP.Update(apNum);
 		}
 	}
 }
