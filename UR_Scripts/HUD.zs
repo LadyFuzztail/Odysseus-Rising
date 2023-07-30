@@ -9,13 +9,16 @@ class YggdrasilHUD : BaseStatusBar
 	double spFrac;
 	double hpFrac;
 	double acFrac;
+	int hpNum;
+	int spNum;
 	int apNum;
+	int	acPercent;
 	
 	override void Init()
 	{
 		super.Init();
 		
-		font yggdraSmall = "yggsmall";
+		font yggdraSmall = "yggsmal2";
 		yggdraFont = HUDFont.Create(yggdraSmall,0,0,2,2);
 		interpSP = DynamicValueInterpolator.Create(0,0.5,1,20);
 		interpHP = DynamicValueInterpolator.Create(0,0.5,1,15);
@@ -24,7 +27,10 @@ class YggdrasilHUD : BaseStatusBar
 		spFrac = 0.;
 		hpFrac = 0.;
 		acFrac = 0.;
-		apNum = 0.;
+		hpNum = 0;
+		spNum = 0;
+		apNum = 0;
+		acPercent = 0;
 	}
 	
 	override void Draw(int state, double TicFrac)
@@ -60,7 +66,12 @@ class YggdrasilHUD : BaseStatusBar
 		// AC Bar
 		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),153,(0,47),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
 		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),153,(0,47),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
-//		DrawString(yggdraFont,FormatNumber(interpAP.GetValue(),3),(-147,51),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(0.5,0.5));
+		// Debug Texts
+		DrawString(yggdraFont,FormatNumber(hpNum,3),(-124,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Red,0.9,-1,4,(1.,1.));
+		DrawString(yggdraFont,FormatNumber(spNum,3),(-40,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,0.9,-1,4,(1.,1.));
+		DrawString(yggdraFont,FormatNumber(interpAP.GetValue(),3),(40,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.,1.));
+		DrawString(yggdraFont,FormatNumber(acPercent,2),(112,77),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Gold,0.9,-1,4,(.5,.5));
+		DrawString(yggdraFont,"%",(124,77),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Gold,0.9,-1,4,(.5,.5));
 	}
 	
 	override void Tick()
@@ -80,9 +91,15 @@ class YggdrasilHUD : BaseStatusBar
 			acFrac = (153. / player.ArmorMax) * GetAmount("ArmorPoints");
 			int acPix = round(acFrac);
 			interpAC.Update(acPix);
-		
+			
+			hpNum = CPlayer.Health;
+			spNum = GetAmount("ShieldPoints");
 			apNum = GetAmount("ArmorPoints");
 			interpAP.Update(apNum);
+			ArmorControl ACPC = ArmorControl(CPlayer.mo.FindInventory("ArmorControl"));
+			if (ACPC) {
+				acPercent = ACPC.drPercent;
+			}
 		}
 	}
 }
