@@ -7,6 +7,8 @@ class StartItemHandler : EventHandler
 			e.thing.GiveInventory("ShieldControl",1);
 		if (e.thing.player && !e.thing.FindInventory("ArmorControl"))
 			e.thing.GiveInventory("ArmorControl",1);
+		if (e.thing.player && !e.thing.FindInventory("NaniteControl"))
+			e.thing.GiveInventory("NaniteControl",1);
 	}
 }
 // 	Shield system main control class.
@@ -30,7 +32,7 @@ class ShieldControl : Inventory
 	{
 		super.AttachToOwner(other);
 		plr = URPlayer(owner);
-		if (!owner)
+		if (!plr)
 			return;
 		shieldRegenCD = 1;
 		shieldRegenTics = 0.;
@@ -41,9 +43,10 @@ class ShieldControl : Inventory
 		super.DoEffect();
 		if (!owner || owner.player.health <= 0)
 			return;
-		if (owner is "URPlayer")
-		{
+		if (owner is "URPlayer") {
 			ShieldRegen();
+		} else {
+			return;
 		}
 	}
 	
@@ -60,7 +63,7 @@ class ShieldControl : Inventory
 			} else {
 				shieldRegenTics = 0.0;
 			}
-			while ( shieldRegenTics > 35.0 && owner.CountInv("ShieldPoints") < plr.shieldMax ) {
+			while ( shieldRegenTics >= 35.0 && owner.CountInv("ShieldPoints") < plr.shieldMax ) {
 				owner.GiveInventory("ShieldPoints",1);
 				shieldRegenTics -= 35.0;
 			}
@@ -145,7 +148,7 @@ class ArmorControl : Inventory
 	{
 		super.AttachToOwner(other);
 		plr = URPlayer(owner);
-		if (!owner)
+		if (!plr)
 			return;
 		damageReduction = 0.;
 		drPercent = 0;
@@ -157,9 +160,10 @@ class ArmorControl : Inventory
 		super.DoEffect();
 		if (!owner || owner.player.health <= 0)
 			return;
-		if (owner is "URPlayer")
-		{
+		if (owner is "URPlayer") {
 			UpdateArmor();
+		} else {
+			return;
 		}
 	}
 	
@@ -210,5 +214,81 @@ class ArmorPoints : Inventory
 		+Inventory.Undroppable
 		+Inventory.Untossable
 		+Inventory.KeepDepleted
+	}
+}
+//	Nanite systems control item.
+class NaniteControl : Inventory
+{
+	URPlayer 	plr;
+	double		healRate;
+	double		multiplier;
+	double		healTics;
+	
+	Default
+	{
+		Inventory.MaxAmount		1;
+		+Inventory.Undroppable
+		+Inventory.Untossable
+	}
+	
+	override void AttachToOwner(Actor other)
+	{
+		super.AttachToOwner(other);
+		plr = URPlayer(owner);
+		if (!plr)
+			return;
+			
+		healRate = 5.;
+		multiplier = 1.;
+		healTics = 0.;
+	}
+	
+	override void DoEffect()
+	{
+		super.DoEffect();
+		if (!owner || owner.player.health <= 0 )
+			return;
+		if (owner is "URPlayer") {
+			TickNanite();
+		} else {
+			return;
+		}
+	}
+	
+	void TickNanite()
+	{
+		if (plr) {
+			if ( !!owner.CountInv("NanitePoints") && owner.player.health < owner.GetMaxHealth(true) ) {
+				healTics += (healRate * multiplier);
+			} else {
+				healTics = 0.0;
+			}
+			while (healTics >= 35.0 && owner.player.health < owner.GetMaxHealth(true) && !!owner.CountInv("NanitePoints") ) {
+				healTics -= 35.0;
+				owner.GiveBody(1,owner.GetMaxHealth(true));
+				owner.TakeInventory("NanitePoints",1);
+			}
+		}
+	}
+}
+//	Nanite Points dummy item.
+class NanitePoints : Inventory
+{
+	Default
+	{
+		Inventory.MaxAmount		9999;
+		+Inventory.Undroppable
+		+Inventory.Untossable
+		+Inventory.KeepDepleted
+	}
+}
+// 	Nanite Gate dummy item
+class NaniteGate : Inventory
+{
+	Default
+	{
+		Inventory.MaxAmount		1;
+		+Inventory.Undroppable
+		+Inventory.Untossable
 	}
 }

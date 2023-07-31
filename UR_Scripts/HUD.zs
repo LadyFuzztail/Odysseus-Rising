@@ -5,14 +5,17 @@ class YggdrasilHUD : BaseStatusBar
 	DynamicValueInterpolator interpHP;
 	DynamicValueInterpolator interpAC;
 	DynamicValueInterpolator interpAP;
+	DynamicValueInterpolator interpNP;
 	URPlayer player;
 	double spFrac;
 	double hpFrac;
 	double acFrac;
+	double npFrac;
 	int hpNum;
 	int spNum;
 	int apNum;
 	int	acPercent;
+	int npNum;
 	
 	override void Init()
 	{
@@ -24,9 +27,11 @@ class YggdrasilHUD : BaseStatusBar
 		interpHP = DynamicValueInterpolator.Create(0,0.5,1,15);
 		interpAC = DynamicValueInterpolator.Create(0,0.5,1,15);
 		interpAP = DynamicValueInterpolator.Create(0,0.5,1,15);
+		interpNP = DynamicValueInterpolator.Create(0,0.5,1,8);
 		spFrac = 0.;
 		hpFrac = 0.;
 		acFrac = 0.;
+		npFrac = 0.;
 		hpNum = 0;
 		spNum = 0;
 		apNum = 0;
@@ -66,12 +71,18 @@ class YggdrasilHUD : BaseStatusBar
 		// AC Bar
 		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),153,(0,47),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
 		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),153,(0,47),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
+		// NP Bar
+		DrawImage("NPBORDER",(208,32),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
+		DrawImage("NPBORDER",(-208,32),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
+		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),54,(209,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
+		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),54,(-209,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
 		// Debug Texts
 		DrawString(yggdraFont,FormatNumber(hpNum,3),(-124,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Red,0.9,-1,4,(1.,1.));
 		DrawString(yggdraFont,FormatNumber(spNum,3),(-40,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,0.9,-1,4,(1.,1.));
 		DrawString(yggdraFont,FormatNumber(interpAP.GetValue(),3),(40,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.,1.));
 		DrawString(yggdraFont,FormatNumber(acPercent,2),(112,77),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Gold,0.9,-1,4,(.5,.5));
 		DrawString(yggdraFont,"%",(124,77),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Gold,0.9,-1,4,(.5,.5));
+		DrawString(yggdraFont,FormatNumber(npNum,3),(1,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_CENTER,Font.CR_Orange,0.9,-1,4,(1.,1.));
 	}
 	
 	override void Tick()
@@ -80,7 +91,7 @@ class YggdrasilHUD : BaseStatusBar
 		
 		player = URPlayer(CPlayer.mo);
 		if (player) {
-			spFrac = (207. / player.ShieldMax) * GetAmount("ShieldPoints");
+			spFrac = (207. / player.shieldMax) * GetAmount("ShieldPoints");
 			int spPix = round(spFrac);
 			interpSP.Update(spPix);
 			
@@ -88,13 +99,18 @@ class YggdrasilHUD : BaseStatusBar
 			int hpPix = round(hpFrac);
 			interpHP.Update(hpPix);
 		
-			acFrac = (153. / player.ArmorMax) * GetAmount("ArmorPoints");
+			acFrac = (153. / player.armorMax) * GetAmount("ArmorPoints");
 			int acPix = round(acFrac);
 			interpAC.Update(acPix);
+			
+			npFrac = (54. / player.nanitePool) * GetAmount("NanitePoints");
+			int npPix = round(npFrac);
+			interpNP.Update(npPix);
 			
 			hpNum = CPlayer.Health;
 			spNum = GetAmount("ShieldPoints");
 			apNum = GetAmount("ArmorPoints");
+			npNum = GetAmount("NanitePoints");
 			interpAP.Update(apNum);
 			ArmorControl ACPC = ArmorControl(CPlayer.mo.FindInventory("ArmorControl"));
 			if (ACPC) {
