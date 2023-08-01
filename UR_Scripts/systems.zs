@@ -5,10 +5,10 @@ class StartItemHandler : EventHandler
 	{
 		if (e.thing.player && !e.thing.FindInventory("ShieldControl"))
 			e.thing.GiveInventory("ShieldControl",1);
-		if (e.thing.player && !e.thing.FindInventory("ArmorControl"))
-			e.thing.GiveInventory("ArmorControl",1);
 		if (e.thing.player && !e.thing.FindInventory("NaniteControl"))
 			e.thing.GiveInventory("NaniteControl",1);
+		if (e.thing.player && !e.thing.FindInventory("ArmorControl"))
+			e.thing.GiveInventory("ArmorControl",1);
 	}
 }
 // 	Shield system main control class.
@@ -223,6 +223,8 @@ class NaniteControl : Inventory
 	double		healRate;
 	double		multiplier;
 	double		healTics;
+	bool		crisisMode;
+	int			crisisTimer;
 	
 	Default
 	{
@@ -241,6 +243,8 @@ class NaniteControl : Inventory
 		healRate = 5.;
 		multiplier = 1.;
 		healTics = 0.;
+		crisisMode = false;
+		crisisTimer = 0;
 	}
 	
 	override void DoEffect()
@@ -258,7 +262,15 @@ class NaniteControl : Inventory
 	void TickNanite()
 	{
 		if (plr) {
-			if ( !!owner.CountInv("NanitePoints") && owner.player.health < owner.GetMaxHealth(true) ) {
+			multiplier = 1.;
+			if (crisisTimer == 0) {
+				crisisMode = false;
+			}
+			if (crisisMode) {
+				multiplier += 1.5;
+				--crisisTimer;
+			}
+			if (!!owner.CountInv("NanitePoints") && owner.player.health < owner.GetMaxHealth(true) ) {
 				healTics += (healRate * multiplier);
 			} else {
 				healTics = 0.0;
@@ -267,6 +279,16 @@ class NaniteControl : Inventory
 				healTics -= 35.0;
 				owner.GiveBody(1,owner.GetMaxHealth(true));
 				owner.TakeInventory("NanitePoints",1);
+			}
+			if ((owner.player.health >= owner.GetMaxHealth(true) || owner.CountInv("NanitePoints") >= owner.GetMaxHealth(false)) && !owner.FindInventory("NaniteGate")) {
+				owner.GiveInventory("NaniteGate",1);
+				owner.A_StartSound("player/nanite/gateon",0);
+			}
+			if (owner.player.health == 1 && !!owner.FindInventory("NaniteGate")) {
+				owner.TakeInventory("NaniteGate",1);
+				owner.A_StartSound("player/nanite/crisis",0);
+				crisisMode = true;
+				crisisTimer = 140;
 			}
 		}
 	}
@@ -282,13 +304,11 @@ class NanitePoints : Inventory
 		+Inventory.KeepDepleted
 	}
 }
-// 	Nanite Gate dummy item
-class NaniteGate : Inventory
+// 	Nanite Gate, effectively a buddha item that lasts as long as it's in the inventory.
+class NaniteGate : PowerBuddha
 {
 	Default
 	{
-		Inventory.MaxAmount		1;
-		+Inventory.Undroppable
-		+Inventory.Untossable
+		Powerup.Duration -86400;
 	}
 }

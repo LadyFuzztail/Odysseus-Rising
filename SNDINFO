@@ -1,3 +1,5 @@
 player/shields/break	USSHBREK
 player/shields/charge	USSHCHRG
 player/shields/full		USSHFULL
+player/nanite/gateon	USNGPWON
+player/nanite/crisis	USNGCRIS

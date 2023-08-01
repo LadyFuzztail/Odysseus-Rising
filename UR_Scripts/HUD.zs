@@ -76,6 +76,10 @@ class YggdrasilHUD : BaseStatusBar
 		DrawImage("NPBORDER",(-208,32),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
 		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),54,(209,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
 		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),54,(-209,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
+		if ( CheckInventory("NaniteGate") ) {
+			DrawBar("HGBAR","HGBAROFF",interpNP.GetValue(),54,(209,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,1.0);
+			DrawBar("HGBAR","HGBAROFF",interpNP.GetValue(),54,(-209,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,1.0);
+		}
 		// Debug Texts
 		DrawString(yggdraFont,FormatNumber(hpNum,3),(-124,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Red,0.9,-1,4,(1.,1.));
 		DrawString(yggdraFont,FormatNumber(spNum,3),(-40,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,0.9,-1,4,(1.,1.));
