@@ -52,9 +52,9 @@ class ShieldControl : Inventory
 	
 	void ShieldRegen()
 	{
-		if ( shieldRegenCD > -1 )
+		if (shieldRegenCD > -1)
 			--shieldRegenCD;
-		if ( shieldRegenCD == 0)
+		if (shieldRegenCD == 0)
 			owner.A_StartSound("player/shields/charge",0);
 		if (plr && shieldRegenCD <= 0)
 		{
@@ -63,16 +63,19 @@ class ShieldControl : Inventory
 			} else {
 				shieldRegenTics = 0.0;
 			}
-			while ( shieldRegenTics >= 35.0 && owner.CountInv("ShieldPoints") < plr.shieldMax ) {
+			while (shieldRegenTics >= 35.0 && owner.CountInv("ShieldPoints") < plr.shieldMax) {
 				owner.GiveInventory("ShieldPoints",1);
 				shieldRegenTics -= 35.0;
 			}
-			if ( owner.CountInv("ShieldPoints") == plr.shieldMax && !owner.FindInventory("ShieldGate") ) {
+			if (owner.CountInv("ShieldPoints") >= plr.shieldMax && !owner.FindInventory("ShieldGate")) {
 				owner.GiveInventory("ShieldGate",1);
 			}
-			if ( owner.CountInv("ShieldPoints") == plr.shieldMax && !fullyCharged ) {
+			if (owner.CountInv("ShieldPoints") >= plr.shieldMax && !fullyCharged) {
 				owner.A_StartSound("player/shields/full",0);
 				fullyCharged = true;
+			}
+			if (owner.CountInv("ShieldPoints") > plr.shieldMax) {
+				owner.TakeInventory("ShieldPoints", owner.CountInv("ShieldPoints") - plr.ShieldMax);
 			}
 		}
 	}
@@ -244,7 +247,6 @@ class NaniteControl : Inventory
 		multiplier = 1.;
 		healTics = 0.;
 		crisisMode = false;
-		crisisTimer = 0;
 	}
 	
 	override void DoEffect()
@@ -262,13 +264,15 @@ class NaniteControl : Inventory
 	void TickNanite()
 	{
 		if (plr) {
-			multiplier = 1.;
-			if (crisisTimer == 0) {
+			multiplier = 1. + (0.01 * owner.CountInv("NanitePoints"));
+			if (owner.player.health >= MAX((0.25 * owner.GetMaxHealth(true)),25)) {
 				crisisMode = false;
 			}
 			if (crisisMode) {
 				multiplier += 1.5;
-				--crisisTimer;
+			}
+			if (owner.FindInventory("PowerStrength")){
+				multiplier += 0.5;
 			}
 			if (!!owner.CountInv("NanitePoints") && owner.player.health < owner.GetMaxHealth(true) ) {
 				healTics += (healRate * multiplier);
@@ -280,7 +284,7 @@ class NaniteControl : Inventory
 				owner.GiveBody(1,owner.GetMaxHealth(true));
 				owner.TakeInventory("NanitePoints",1);
 			}
-			if ((owner.player.health >= owner.GetMaxHealth(true) || owner.CountInv("NanitePoints") >= owner.GetMaxHealth(false)) && !owner.FindInventory("NaniteGate")) {
+			if ((owner.player.health >= MIN(100,owner.GetMaxHealth(true))) && !owner.FindInventory("NaniteGate")) {
 				owner.GiveInventory("NaniteGate",1);
 				owner.A_StartSound("player/nanite/gateon",0);
 			}
@@ -288,7 +292,6 @@ class NaniteControl : Inventory
 				owner.TakeInventory("NaniteGate",1);
 				owner.A_StartSound("player/nanite/crisis",0);
 				crisisMode = true;
-				crisisTimer = 140;
 			}
 		}
 	}
