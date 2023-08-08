@@ -11,11 +11,55 @@ class YggdrasilHUD : BaseStatusBar
 	double hpFrac;
 	double acFrac;
 	double npFrac;
+	
 	int hpNum;
 	int spNum;
 	int apNum;
 	int	acPercent;
 	int npNum;
+	
+	inventory GCA;
+	DynamicValueInterpolator interpCWeap;
+	DynamicValueInterpolator interpCWAmount;
+	double	ammoFrac;
+	int	currAmmo;
+	int	currAmmoMax;
+	DynamicValueInterpolator interpClip;
+	DynamicValueInterpolator interpClipNum;
+	DynamicValueInterpolator interpShell;
+	DynamicValueInterpolator interpShellNum;
+//	DynamicValueInterpolator interpRifl;
+//	DynamicValueInterpolator interpRiflNum;
+	DynamicValueInterpolator interpRocket;
+	DynamicValueInterpolator interpRocketNum;
+//	DynamicValueInterpolator interpThermal;
+//	DynamicValueInterpolator interpThermalNum;
+	DynamicValueInterpolator interpCell;
+	DynamicValueInterpolator interpCellNum;
+	double clipFrac;
+	double shellFrac;
+//	double riflFrac;
+	double rocketFrac;
+//	double thermalFrac;
+	double cellFrac;
+	double clipRatio;
+	double shellRatio;
+//	double riflRatio;
+	double rocketRatio;
+//	double thermalRatio;
+	double cellRatio;
+	int	clipNum;
+	int clipMax;
+	int shellNum;
+	int shellMax;
+//	int riflNum;
+//	int riflMax;
+	int rocketNum;
+	int rocketMax;
+//	int thermalNum;
+//	int thermalMax;
+	int cellNum;
+	int cellMax;
 	
 	override void Init()
 	{
@@ -23,6 +67,7 @@ class YggdrasilHUD : BaseStatusBar
 		
 		font yggdraSmall = "yggsmal2";
 		yggdraFont = HUDFont.Create(yggdraSmall,0,0,2,2);
+		
 		interpSP = DynamicValueInterpolator.Create(0,0.5,1,20);
 		interpHP = DynamicValueInterpolator.Create(0,0.5,1,15);
 		interpAC = DynamicValueInterpolator.Create(0,0.5,1,15);
@@ -32,10 +77,36 @@ class YggdrasilHUD : BaseStatusBar
 		hpFrac = 0.;
 		acFrac = 0.;
 		npFrac = 0.;
+		
 		hpNum = 0;
 		spNum = 0;
 		apNum = 0;
 		acPercent = 0;
+		
+		interpCWeap = DynamicValueInterpolator.Create(0,0.5,1,40);
+		interpCWAmount = DynamicValueInterpolator.Create(0,0.5,1,50);
+		ammoFrac = 0.;
+		currAmmo = 0;
+		currAmmoMax = 0;
+		interpClip = DynamicValueInterpolator.Create(0,0.5,1,8);
+		interpClipNum = DynamicValueInterpolator.Create(0,0.5,1,50);
+		interpShell = DynamicValueInterpolator.Create(0,0.5,1,8);
+		interpShellNum = DynamicValueInterpolator.Create(0,0.5,1,20);
+//		interpRifl = DynamicValueInterpolator.Create(0,0.5,1,8);
+//		interpRiflNum = DynamicValueInterpolator.Create(0,0.5,1,50);
+		interpRocket = DynamicValueInterpolator.Create(0,0.5,1,8);
+		interpRocketNum = DynamicValueInterpolator.Create(0,0.5,1,20);
+//		interpThermal = DynamicValueInterpolator.Create(0,0.5,1,8);
+//		interpThermalNum = DynamicValueInterpolator.Create(0,0.5,1,20);
+		interpCell = DynamicValueInterpolator.Create(0,0.5,1,8);
+		interpCellNum = DynamicValueInterpolator.Create(0,0.5,1,50);
+		clipFrac = 0.;
+		shellFrac = 0.;
+//		riflFrac = 0.;
+		rocketFrac = 0.;
+//		thermalFrac = 0.;
+		cellFrac = 0.;
+		
 	}
 	
 	override void Draw(int state, double TicFrac)
@@ -54,6 +125,7 @@ class YggdrasilHUD : BaseStatusBar
 	
 	void DrawYggdraHUD()
 	{
+		// Vitality Segment
 		// SP Bar
 		DrawImage("SPBORDER",(0,32),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
 		DrawImage("SPBORDER",(0,32),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
@@ -87,6 +159,65 @@ class YggdrasilHUD : BaseStatusBar
 		DrawString(yggdraFont,FormatNumber(acPercent,2),(112,77),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Gold,0.9,-1,4,(.5,.5));
 		DrawString(yggdraFont,"%",(124,77),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Gold,0.9,-1,4,(.5,.5));
 		DrawString(yggdraFont,FormatNumber(npNum,3),(1,68),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_CENTER,Font.CR_Orange,0.9,-1,4,(1.,1.));
+		// Arms Segment
+		// Current Weapon Display
+		DrawImage("CWBORDER",(-32,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+		if (GCA != NULL) {
+			DrawBar("CWEAPBAR","CWEAPOFF",interpCWeap.GetValue(),190,(-33,-33),0,1,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+			DrawString(yggdraFont,FormatNumber(interpCWAmount.GetValue(),3),(-132,-88),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(1.,1.));
+			DrawString(yggdraFont,FormatNumber(currAmmoMax,3,4,0,"/ "),(-128,-88),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,0.9,-1,4,(1.,1.));
+		} else {
+			DrawBar("CWEAPBAR","CWEAPOFF",interpCWeap.GetValue(),190,(-33,-33),0,1,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+		}
+		int ammoXOffset = -224;
+		if ( cellNum > 0) {
+			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,cellRatio);
+			DrawImage("CELLAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+			DrawBar("CELLBAR","CELLBOFF",interpCell.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+			DrawString(yggdraFont,FormatNumber(interpCellNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
+			ammoXOffset -= 32;
+		}
+//		if ( thermalNum > 0) {
+//			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+//			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,thermalRatio);
+//			DrawImage("THRMAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+//			DrawBar("THRMBAR","THRMBOFF",interpThermal.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+//			DrawString(yggdraFont,FormatNumber(interpThermalNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
+//			ammoXOffset -= 32;
+//		}
+		if ( rocketNum > 0) {
+			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,rocketRatio);
+			DrawImage("RCKTAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+			DrawBar("RCKTBAR","RCKTBOFF",interpRocket.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+			DrawString(yggdraFont,FormatNumber(interpRocketNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
+			ammoXOffset -= 32;
+		}
+//		if ( riflNum > 0) {
+//			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+//			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,riflRatio);
+//			DrawImage("RIFLAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+//			DrawBar("RIFLBAR","RIFLBOFF",interpRifl.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+//			DrawString(yggdraFont,FormatNumber(interpRiflNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
+//			ammoXOffset -= 32;
+//		}
+		if ( shellNum > 0) {
+			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,shellRatio);
+			DrawImage("SHOTAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+			DrawBar("SHOTBAR","SHOTBOFF",interpShell.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+			DrawString(yggdraFont,FormatNumber(interpShellNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
+			ammoXOffset -= 32;
+		}
+		if ( clipNum > 0) {
+			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,clipRatio);
+			DrawImage("PISTAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+			DrawBar("PISTBAR","PISTBOFF",interpClip.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+			DrawString(yggdraFont,FormatNumber(interpClipNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
+			ammoXOffset -= 32;
+		}
 	}
 	
 	override void Tick()
@@ -120,6 +251,61 @@ class YggdrasilHUD : BaseStatusBar
 			if (ACPC) {
 				acPercent = ACPC.drPercent;
 			}
+			
+			GCA = GetCurrentAmmo();
+			if (GCA != NULL) {
+				currAmmo = GCA.Amount;
+				currAmmoMax = GCA.MaxAmount;
+			} else {
+				currAmmo = 1;
+				currAmmoMax = 1;
+			}
+			ammoFrac = (190. / currAmmoMax) * currAmmo;
+			int ammoPix = round(ammoFrac);
+			interpCWeap.Update(ammoPix);
+			interpCWAmount.Update(currAmmo);
+			// Individual Ammo Modules
+			[clipNum, clipMax] = GetAmount("Clip");
+			clipFrac = (30. / clipMax) * clipNum;
+			clipRatio = (1. / clipMax) * clipNum;
+			int clipPix = round(clipFrac);
+			interpClip.Update(clipPix);
+			interpClipNum.Update(clipNum);
+			
+			[shellNum, shellMax] = GetAmount("Shell");
+			shellFrac = (30. / shellMax) * shellNum;
+			shellRatio = (1. / shellMax) * shellNum;
+			int shellPix = round(shellFrac);
+			interpShell.Update(shellPix);
+			interpShellNum.Update(shellNum);
+			
+//			[riflNum, riflMax] = GetAmount("RifleMag");
+//			riflFrac = (30. / riflMax) * riflNum;
+//			riflRatio = (1. / riflMax) * riflNum;
+//			int riflPix = round(riflFrac);
+//			interpRifl.Update(riflPix);
+//			interpRiflNum.Update(riflNum);
+			
+			[rocketNum, rocketMax] = GetAmount("RocketAmmo");
+			rocketFrac = (30. / rocketMax) * rocketNum;
+			rocketRatio = (1. / rocketMax) * rocketNum;
+			int rocketPix = round(rocketFrac);
+			interpRocket.Update(RocketPix);
+			interpRocketNum.Update(RocketNum);
+			
+//			[thermalNum, thermalMax] = GetAmount("ThermalCharge");
+//			thermalFrac = (30. / thermalMax) * thermalNum;
+//			thermalRatio = (1. / thermalMax) * thermalNum;
+//			int thermalPix = round(thermalFrac);
+//			interpThermal.Update(thermalPix);
+//			interpThermalNum.Update(thermalNum);
+			
+			[cellNum, cellMax] = GetAmount("Cell");
+			cellFrac = (30. / cellMax) * cellNum;
+			cellRatio = (1. / cellMax) * cellNum;
+			int cellPix = round(cellFrac);
+			interpCell.Update(cellPix);
+			interpCellNum.Update(cellNum);
 		}
 	}
 }
