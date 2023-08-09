@@ -164,10 +164,35 @@ class YggdrasilHUD : BaseStatusBar
 		DrawImage("CWBORDER",(-32,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
 		if (GCA != NULL) {
 			DrawBar("CWEAPBAR","CWEAPOFF",interpCWeap.GetValue(),190,(-33,-33),0,1,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
-			DrawString(yggdraFont,FormatNumber(interpCWAmount.GetValue(),3),(-132,-88),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(1.,1.));
-			DrawString(yggdraFont,FormatNumber(currAmmoMax,3,4,0,"/ "),(-128,-88),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,0.9,-1,4,(1.,1.));
+			DrawString(yggdraFont,FormatNumber(interpCWAmount.GetValue(),3),(-135,-88),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,1.0,-1,4,(1.,1.));
+			DrawString(yggdraFont,FormatNumber(currAmmoMax,3,4,0,"/ "),(-129,-88),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.,1.));
 		} else {
 			DrawBar("CWEAPBAR","CWEAPOFF",interpCWeap.GetValue(),190,(-33,-33),0,1,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+		}
+		string currWeaponTag = GetWeaponTag();
+		if (currWeaponTag == "Chainsaw") {
+			DrawImage("CHAINHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+		}
+		if (currWeaponTag == "Pistol") {
+			DrawImage("PISTLHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+		}
+		if (currWeaponTag == "Shotgun") {
+			DrawImage("SHTGNHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+		}
+		if (currWeaponTag == "Super Shotgun") {
+			DrawImage("SUPSGHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+		}
+		if (currWeaponTag == "Chaingun") {
+			DrawImage("CHGUNHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+		}
+		if (currWeaponTag == "Rocket Launcher") {
+			DrawImage("RLAUNHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+		}
+		if (currWeaponTag == "Plasma Rifle") {
+			DrawImage("PLASMHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+		}
+		if (currWeaponTag == "BFG 9000") {
+			DrawImage("BFGEEHUD",(-128,-34),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER_BOTTOM);
 		}
 		int ammoXOffset = -224;
 		if ( cellNum > 0) {
