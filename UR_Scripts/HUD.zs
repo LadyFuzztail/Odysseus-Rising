@@ -61,6 +61,13 @@ class YggdrasilHUD : BaseStatusBar
 	int cellNum;
 	int cellMax;
 	
+	LevelDataHandler LDH;
+	int CRCellCount;
+	bool CRCompactMode;
+	double CRBossCellsFilled;
+	double CRKillCellsFilled;
+	double CRScryCellsFilled;
+	
 	override void Init()
 	{
 		super.Init();
@@ -107,6 +114,12 @@ class YggdrasilHUD : BaseStatusBar
 //		thermalFrac = 0.;
 		cellFrac = 0.;
 		
+		CRCellCount = 0;
+		CRCompactMode = false;
+		CRBossCellsFilled = 0.0;
+		CRKillCellsFilled = 0.0;
+		CRScryCellsFilled = 0.0;
+		
 	}
 	
 	override void Draw(int state, double TicFrac)
@@ -129,8 +142,8 @@ class YggdrasilHUD : BaseStatusBar
 		// SP Bar
 		DrawImage("SPBORDER",(0,32),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
 		DrawImage("SPBORDER",(0,32),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
-		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),207,(0,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
-		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),207,(0,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
+		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),207,(0,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.75);
+		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),207,(0,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.75);
 		if ( CheckInventory("ShieldGate") ) {
 			DrawBar("SGBAR","SGBAROFF",interpSP.GetValue(),207,(0,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,1.0);
 			DrawBar("SGBAR","SGBAROFF",interpSP.GetValue(),207,(0,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,1.0);
@@ -138,16 +151,16 @@ class YggdrasilHUD : BaseStatusBar
 		// HP Bar
 		DrawImage("HPBORDER",(0,49),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
 		DrawImage("HPBORDER",(0,49),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
-		DrawBar("HPBAR","HPBAROFF",interpHP.GetValue(),151,(0,50),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
-		DrawBar("HPBAR","HPBAROFF",interpHP.GetValue(),151,(0,50),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
+		DrawBar("HPBAR","HPBAROFF",interpHP.GetValue(),151,(0,50),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.75);
+		DrawBar("HPBAR","HPBAROFF",interpHP.GetValue(),151,(0,50),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.75);
 		// AC Bar
 		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),153,(0,47),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
 		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),153,(0,47),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
 		// NP Bar
 		DrawImage("NPBORDER",(208,32),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
 		DrawImage("NPBORDER",(-208,32),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
-		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),54,(209,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
-		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),54,(-209,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
+		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),54,(209,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.75);
+		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),54,(-209,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.75);
 		if ( CheckInventory("NaniteGate") ) {
 			DrawBar("HGBAR","HGBAROFF",interpNP.GetValue(),54,(209,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,1.0);
 			DrawBar("HGBAR","HGBAROFF",interpNP.GetValue(),54,(-209,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,1.0);
@@ -199,7 +212,7 @@ class YggdrasilHUD : BaseStatusBar
 			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
 			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,cellRatio);
 			DrawImage("CELLAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
-			DrawBar("CELLBAR","CELLBOFF",interpCell.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+			DrawBar("CELLBAR","CELLBOFF",interpCell.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.75);
 			DrawString(yggdraFont,FormatNumber(interpCellNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
 			ammoXOffset -= 32;
 		}
@@ -207,7 +220,7 @@ class YggdrasilHUD : BaseStatusBar
 //			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
 //			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,thermalRatio);
 //			DrawImage("THRMAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
-//			DrawBar("THRMBAR","THRMBOFF",interpThermal.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+//			DrawBar("THRMBAR","THRMBOFF",interpThermal.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.75);
 //			DrawString(yggdraFont,FormatNumber(interpThermalNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
 //			ammoXOffset -= 32;
 //		}
@@ -215,7 +228,7 @@ class YggdrasilHUD : BaseStatusBar
 			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
 			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,rocketRatio);
 			DrawImage("RCKTAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
-			DrawBar("RCKTBAR","RCKTBOFF",interpRocket.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+			DrawBar("RCKTBAR","RCKTBOFF",interpRocket.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.75);
 			DrawString(yggdraFont,FormatNumber(interpRocketNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
 			ammoXOffset -= 32;
 		}
@@ -223,7 +236,7 @@ class YggdrasilHUD : BaseStatusBar
 //			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
 //			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,riflRatio);
 //			DrawImage("RIFLAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
-//			DrawBar("RIFLBAR","RIFLBOFF",interpRifl.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+//			DrawBar("RIFLBAR","RIFLBOFF",interpRifl.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.75);
 //			DrawString(yggdraFont,FormatNumber(interpRiflNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
 //			ammoXOffset -= 32;
 //		}
@@ -231,7 +244,7 @@ class YggdrasilHUD : BaseStatusBar
 			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
 			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,shellRatio);
 			DrawImage("SHOTAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
-			DrawBar("SHOTBAR","SHOTBOFF",interpShell.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+			DrawBar("SHOTBAR","SHOTBOFF",interpShell.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.75);
 			DrawString(yggdraFont,FormatNumber(interpShellNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
 			ammoXOffset -= 32;
 		}
@@ -239,10 +252,77 @@ class YggdrasilHUD : BaseStatusBar
 			DrawImage("AMMOLOW",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
 			DrawImage("AMMOHIGH",(ammoXOffset,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,clipRatio);
 			DrawImage("PISTAMMO",(ammoXOffset-3,-16),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
-			DrawBar("PISTBAR","PISTBOFF",interpClip.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
+			DrawBar("PISTBAR","PISTBOFF",interpClip.GetValue(),30,(ammoXOffset-1,-33),0,3,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.75);
 			DrawString(yggdraFont,FormatNumber(interpClipNum.GetValue(),3),(ammoXOffset-20,-76),DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,0.9,-1,4,(0.5,0.5));
 			ammoXOffset -= 32;
 		}
+		// Combat Rank Module
+		// Draw the cells
+		int cellXOffset = -32;
+		if ( !CRCompactMode) {
+			for ( int cellIndex = 0; cellIndex < CRCellCount; ++cellIndex ) {
+				if (cellIndex < LDH.bossCellCount) {
+					DrawImage("CRBOSSBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+					DrawBar("CRBOSBAR","CRBOSOFF",MIN(MAX((CRBossCellsFilled - (cellIndex * 1.)),0.0),1.0),1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+				} else if (cellIndex < (LDH.monsterCellCount + LDH.bossCellCount)) {
+					DrawImage("CRKILLBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+					DrawBar("CRKILBAR","CRKILOFF",MIN(MAX((CRKillCellsFilled - ((cellIndex - LDH.bossCellCount) * 1.)),0.0),1.0),1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+				} else {
+					DrawImage("CRSCRYBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+					DrawBar("CRSCRBAR","CRSCROFF",MIN(MAX((CRScryCellsFilled - ((cellIndex - LDH.bossCellCount - LDH.monsterCellCount) * 1.)),0.0),1.0),1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+				}
+				cellXOffset -= 24;
+			}
+		} else {
+			int CR_BCF_Count = floor(CRBossCellsFilled);
+			int CR_KCF_Count = floor(CRKillCellsFilled);
+			int CR_SCF_Count = floor(CRScryCellsFilled);
+			double CR_BCF_Fract = CRBossCellsFilled - (CR_BCF_Count * 1.0);
+			double CR_KCF_Fract = CRKillCellsFilled - (CR_KCF_Count * 1.0);
+			double CR_SCF_Fract = CRScryCellsFilled - (CR_SCF_Count * 1.0);
+			for ( int cellIndex = 0; cellIndex < 3; ++cellIndex) {
+				switch (cellIndex)
+				{
+					case 0:
+						if (LDH.bossCellCount > 0) {
+							DrawImage("CRBOSSBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRBOSBAR","CRBOSOFF",CR_BCF_Fract,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawString(yggdraFont,FormatNumber(LDH.bossCellCount,2,2),(cellXOffset-30,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,"/ ",(cellXOffset-50,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,FormatNumber(CR_BCF_Count,2,2),(cellXOffset-64,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
+							cellXOffset -= 96;
+							break;
+						} else {
+							break;
+						}
+					case 1:
+						if (LDH.monsterCellCount > 0) {
+							DrawImage("CRKILLBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRKILBAR","CRKILOFF",CR_KCF_Fract,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawString(yggdraFont,FormatNumber(LDH.monsterCellCount,2,2),(cellXOffset-30,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,"/ ",(cellXOffset-50,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,FormatNumber(CR_KCF_Count,2,2),(cellXOffset-64,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
+							cellXOffset -= 96;
+							break;
+						} else {
+							break;
+						}
+					case 2:
+						if (LDH.secretCellCount > 0) {
+							DrawImage("CRSCRYBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRSCRBAR","CRSCROFF",CR_SCF_Fract,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawString(yggdraFont,FormatNumber(LDH.secretCellCount,2,2),(cellXOffset-30,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,"/ ",(cellXOffset-50,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,FormatNumber(CR_SCF_Count,2,2),(cellXOffset-64,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
+							cellXOffset -= 96;
+							break;
+						} else {
+							break;
+						}
+				}
+			}
+		}
+		// DrawString(yggdrafont,FormatNumber(LDH.killedMonsters+LDH.killedBosses,3),(-32,110),DI_SCREEN_RIGHT|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
 	}
 	
 	override void Tick()
@@ -251,6 +331,7 @@ class YggdrasilHUD : BaseStatusBar
 		
 		player = URPlayer(CPlayer.mo);
 		if (player) {
+			// Vitality Module
 			spFrac = (207. / player.shieldMax) * GetAmount("ShieldPoints");
 			int spPix = round(spFrac);
 			interpSP.Update(spPix);
@@ -276,7 +357,7 @@ class YggdrasilHUD : BaseStatusBar
 			if (ACPC) {
 				acPercent = ACPC.drPercent;
 			}
-			
+			// Ammo Module
 			GCA = GetCurrentAmmo();
 			if (GCA != NULL) {
 				currAmmo = GCA.Amount;
@@ -331,6 +412,19 @@ class YggdrasilHUD : BaseStatusBar
 			int cellPix = round(cellFrac);
 			interpCell.Update(cellPix);
 			interpCellNum.Update(cellNum);
+			// Combat Rank Module
+			LDH = LevelDataHandler(EventHandler.Find("LevelDataHandler"));
+			if (LDH) {
+				CRBossCellsFilled = (1. / LDH.totalBosses) * LDH.killedBosses * LDH.bossCellCount;
+				CRKillCellsFilled = (1. / LDH.totalMonsters) * LDH.killedMonsters * LDH.monsterCellCount;
+				CRScryCellsFilled = (1. / LDH.totalSecrets) * LDH.foundSecrets * LDH.secretCellCount;
+				CRCellCount = LDH.secretCellCount + LDH.monsterCellCount + LDH.bossCellCount;
+				if (CRCellCount > 12 ) {
+					CRCompactMode = true;
+				} else {
+					CRCompactMode = false;
+				}
+			}
 		}
 	}
 }

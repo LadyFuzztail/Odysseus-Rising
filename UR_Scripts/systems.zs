@@ -315,3 +315,88 @@ class NaniteGate : PowerBuddha
 		Powerup.Duration -86400;
 	}
 }
+//	Combat Rank functions go here.
+//	This one counts the data from the map.
+class LevelDataHandler : EventHandler
+{
+	int totalSecrets;
+	int foundSecrets;
+	int	secretCellCount;
+	int	totalMonsters;
+	int	killedMonsters;
+	int	monsterCellCount;
+	int	totalBosses;
+	int	killedBosses;
+	int	bossCellCount;
+	
+	override void WorldLoaded (WorldEvent e)
+	{
+		// Initialize Values
+		totalSecrets = level.Total_Secrets;
+		foundSecrets = 0;
+		secretCellCount = floor(totalSecrets ** (1.0/3.0));
+		totalMonsters = 0;
+		killedMonsters = 0;
+		monsterCellCount = 0;
+		totalBosses = 0;
+		killedBosses = 0;
+		bossCellCount = 0;
+	}
+	
+	override void WorldThingSpawned (WorldEvent e)
+	{
+		// Count the total monsters in the map.
+		if (e.thing && e.thing.bIsMonster && e.thing.bShootable && e.thing.CountsAsKill() && !e.thing.bFriendly) {
+			if (e.thing.bBoss) {
+				++totalBosses;
+			} else {
+				++totalMonsters;
+			}
+		}
+	}
+	
+	override void WorldThingDied (WorldEvent e)
+	{
+		// Count the kills in the map.
+		if (e.thing && e.thing.bIsMonster && e.thing.bShootable && e.thing.CountsAsKill() && !e.thing.bFriendly) {
+			if (e.thing.bBoss) {
+				++killedBosses;
+			} else {
+				++killedMonsters;
+			}
+		}
+	}
+	
+	override void WorldThingDestroyed (WorldEvent e)
+	{
+		// Also count the kill when a monster is destroyed, like via Destroy().
+		if (e.thing && e.thing.bIsMonster && e.thing.bShootable && e.thing.CountsAsKill() && !e.thing.bFriendly) {
+			if (e.thing.bBoss) {
+				++killedBosses;
+			} else {
+				++killedMonsters;
+			}
+		}
+	}
+	
+	override void WorldThingRevived (WorldEvent e)
+	{
+		// Decrements the kill count when a monster is revived, like via Archvile resurrection.
+		if (e.thing && e.thing.bIsMonster && e.thing.bShootable && e.thing.CountsAsKill() && !e.thing.bFriendly) {
+			if (e.thing.bBoss) {
+				++totalBosses;
+			} else {
+				++totalMonsters;
+			}
+		}
+	}
+	
+	override void WorldTick ()
+	{
+		// Derive the number of bars to display for monsters and bosses.
+		// And also keep track of found secrets.
+		foundSecrets = level.Found_Secrets;
+		monsterCellCount = floor(totalMonsters ** (1.0/4.0));
+		bossCellCount = floor(totalBosses ** (1.0/3.0));
+	}
+}

@@ -86,7 +86,7 @@ class ArmorShard : Inventory replaces ArmorBonus
 	{
 		Radius	20;
 		Height	16;
-		Inventory.PickupMessage	"$GotArmorBonus";
+		Inventory.PickupMessage	"$GotArmBonus";
 		Inventory.Icon			"BON2A0";
 		Inventory.MaxAmount		0;
 		+CountItem
