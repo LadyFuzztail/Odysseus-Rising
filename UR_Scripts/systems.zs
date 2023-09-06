@@ -343,6 +343,28 @@ class LevelDataHandler : EventHandler
 		bossCellCount = 0;
 	}
 	
+	override void WorldUnloaded (WorldEvent e)
+	{
+		// Calculate and award earned CR
+		int totalAwards = 0;
+		double awardMultiplier = 1.0;
+		if (totalBosses > 0) { totalAwards += ((killedBosses * bossCellCount)/totalBosses); }
+		if (totalMonsters > 0) { totalAwards += ((killedMonsters * monsterCellCount)/totalMonsters); }
+		if (totalSecrets > 0) { totalAwards += ((foundSecrets * secretCellCount)/totalSecrets); }
+		if (totalAwards >= ( bossCellCount + monsterCellCount + secretCellCount)) { awardMultiplier += 1.0; }
+		totalAwards = floor(totalAwards * awardMultiplier);
+		for (int index = 0; index < MAXPLAYERS; ++index) {
+			if (!PlayerInGame[index])
+				continue;
+				
+			let pmo = players[index].mo;
+			if (!pmo)
+				continue;
+				
+			pmo.GiveInventory("CombatRank",totalAwards);
+		}
+	}
+	
 	override void WorldThingSpawned (WorldEvent e)
 	{
 		// Count the total monsters in the map.
@@ -398,5 +420,16 @@ class LevelDataHandler : EventHandler
 		foundSecrets = level.Found_Secrets;
 		monsterCellCount = floor(totalMonsters ** (1.0/4.0));
 		bossCellCount = floor(totalBosses ** (1.0/3.0));
+	}
+}
+// Combat Rank Item
+class CombatRank : Inventory
+{
+	Default
+	{
+		Inventory.MaxAmount	8192;
+		+Inventory.Undroppable
+		+Inventory.Untossable
+		+Inventory.KeepDepleted
 	}
 }

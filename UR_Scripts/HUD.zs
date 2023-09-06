@@ -257,6 +257,9 @@ class YggdrasilHUD : BaseStatusBar
 			ammoXOffset -= 32;
 		}
 		// Combat Rank Module
+		// Draw the CR
+		DrawString(yggdraFont,FormatNumber(GetAmount("CombatRank"),3),(-40,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
+		DrawImage("CRBONICO",(-92,33),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
 		// Draw the cells
 		int cellXOffset = -32;
 		if ( !CRCompactMode) {
