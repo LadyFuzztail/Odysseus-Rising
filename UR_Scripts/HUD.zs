@@ -67,6 +67,13 @@ class YggdrasilHUD : BaseStatusBar
 	double CRBossCellsFilled;
 	double CRKillCellsFilled;
 	double CRScryCellsFilled;
+	int	CRElapsedH;
+	int	CRElapsedM;
+	int	CRElapsedS;
+	double CRElapsedT;
+	int	CRParM;
+	int	CRParS;
+	int CRPacing;
 	
 	override void Init()
 	{
@@ -119,6 +126,13 @@ class YggdrasilHUD : BaseStatusBar
 		CRBossCellsFilled = 0.0;
 		CRKillCellsFilled = 0.0;
 		CRScryCellsFilled = 0.0;
+		CRPacing = 0;
+		CRElapsedH = 0;
+		CRElapsedM = 0;
+		CRElapsedS = 0;
+		CRElapsedT = 0.0;
+		CRParM = 0;
+		CRParS = 0;
 		
 	}
 	
@@ -257,9 +271,93 @@ class YggdrasilHUD : BaseStatusBar
 			ammoXOffset -= 32;
 		}
 		// Combat Rank Module
+		// Draw the time elapsed and par time.
+		switch (CRPacing)
+		{
+			case 5:
+				DrawString(yggdraFont,FormatNumber(CRElapsedH,2,2,2),(-344,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-318,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedM,2,2,2),(-312,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-286,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedS,2,2,2),(-280,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-254,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedT,3,3,2),(-248,48),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(0.5,0.5));
+				DrawString(yggdraFont,"/",(-224,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(-214,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-188,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(-182,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.9,-1,4,(1.0,1.0));
+				break;
+			case 4:
+				DrawString(yggdraFont,FormatNumber(CRElapsedH,2,2,2),(-344,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-318,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedM,2,2,2),(-312,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-286,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedS,2,2,2),(-280,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-254,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedT,3,3,2),(-248,48),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(0.5,0.5));
+				DrawString(yggdraFont,"/",(-224,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(-214,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-188,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(-182,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_LightBlue,0.9,-1,4,(1.0,1.0));
+				break;
+			case 3:
+				DrawString(yggdraFont,FormatNumber(CRElapsedH,2,2,2),(-344,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-318,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedM,2,2,2),(-312,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-286,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedS,2,2,2),(-280,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-254,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedT,3,3,2),(-248,48),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(0.5,0.5));
+				DrawString(yggdraFont,"/",(-224,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(-214,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-188,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(-182,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,0.9,-1,4,(1.0,1.0));
+				break;
+			case 2:
+				DrawString(yggdraFont,FormatNumber(CRElapsedH,2,2,2),(-344,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-318,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedM,2,2,2),(-312,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-286,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedS,2,2,2),(-280,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-254,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedT,3,3,2),(-248,48),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(0.5,0.5));
+				DrawString(yggdraFont,"/",(-224,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(-214,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-188,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(-182,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkGray,0.9,-1,4,(1.0,1.0));
+				break;
+			case 1:
+				DrawString(yggdraFont,FormatNumber(CRElapsedH,2,2,2),(-344,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-318,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedM,2,2,2),(-312,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-286,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedS,2,2,2),(-280,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-254,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedT,3,3,2),(-248,48),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(0.5,0.5));
+				DrawString(yggdraFont,"/",(-224,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(-214,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-188,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(-182,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Black,0.9,-1,4,(1.0,1.0));
+				break;
+			default:
+				DrawString(yggdraFont,FormatNumber(CRElapsedH,2,2,2),(-344,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-318,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedM,2,2,2),(-312,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-286,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedS,2,2,2),(-280,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-254,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRElapsedT,3,3,2),(-248,48),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(0.5,0.5));
+				DrawString(yggdraFont,"/",(-224,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(-214,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,":",(-188,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(-182,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+				break;
+		}
+//		DrawString(yggdraFont,FormatNumber(skill,1,1),(-144,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
+		
 		// Draw the CR
 		DrawString(yggdraFont,FormatNumber(GetAmount("CombatRank"),3),(-40,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
-		DrawImage("CRBONICO",(-92,33),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+		DrawImage("CRBONICO",(-92,36),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
 		// Draw the cells
 		int cellXOffset = -32;
 		if ( !CRCompactMode) {
@@ -289,9 +387,13 @@ class YggdrasilHUD : BaseStatusBar
 					case 0:
 						if (LDH.bossCellCount > 0) {
 							DrawImage("CRBOSSBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRBOSBAR","CRBOSOFF",CR_BCF_Fract,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawString(yggdraFont,FormatNumber(LDH.bossCellCount,2,2),(cellXOffset-30,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
-							DrawString(yggdraFont,"/ ",(cellXOffset-50,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
+							DrawBar("CRBOSBAR","CRBOSOFF",0.0,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRBOSSBR",(cellXOffset-2,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRBOSBAR","CRBOSOFF",0.0,1.0,(cellXOffset-3,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRBOSSBR",(cellXOffset-4,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRBOSBAR","CRBOSOFF",CR_BCF_Fract,1.0,(cellXOffset-5,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawString(yggdraFont,FormatNumber(LDH.bossCellCount,2,2),(cellXOffset-32,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,"/",(cellXOffset-58,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
 							DrawString(yggdraFont,FormatNumber(CR_BCF_Count,2,2),(cellXOffset-64,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
 							cellXOffset -= 96;
 							break;
@@ -301,9 +403,13 @@ class YggdrasilHUD : BaseStatusBar
 					case 1:
 						if (LDH.monsterCellCount > 0) {
 							DrawImage("CRKILLBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRKILBAR","CRKILOFF",CR_KCF_Fract,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawString(yggdraFont,FormatNumber(LDH.monsterCellCount,2,2),(cellXOffset-30,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
-							DrawString(yggdraFont,"/ ",(cellXOffset-50,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
+							DrawBar("CRKILBAR","CRKILOFF",0.0,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRKILLBR",(cellXOffset-2,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRKILBAR","CRKILOFF",0.0,1.0,(cellXOffset-3,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRKILLBR",(cellXOffset-4,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRKILBAR","CRKILOFF",CR_KCF_Fract,1.0,(cellXOffset-5,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawString(yggdraFont,FormatNumber(LDH.monsterCellCount,2,2),(cellXOffset-32,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,"/",(cellXOffset-58,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
 							DrawString(yggdraFont,FormatNumber(CR_KCF_Count,2,2),(cellXOffset-64,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
 							cellXOffset -= 96;
 							break;
@@ -313,9 +419,13 @@ class YggdrasilHUD : BaseStatusBar
 					case 2:
 						if (LDH.secretCellCount > 0) {
 							DrawImage("CRSCRYBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRSCRBAR","CRSCROFF",CR_SCF_Fract,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawString(yggdraFont,FormatNumber(LDH.secretCellCount,2,2),(cellXOffset-30,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
-							DrawString(yggdraFont,"/ ",(cellXOffset-50,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
+							DrawBar("CRSCRBAR","CRSCROFF",0.0,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRSCRYBR",(cellXOffset-2,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRSCRBAR","CRSCROFF",0.0,1.0,(cellXOffset-3,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRSCRYBR",(cellXOffset-4,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRSCRBAR","CRSCROFF",CR_SCF_Fract,1.0,(cellXOffset-5,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawString(yggdraFont,FormatNumber(LDH.secretCellCount,2,2),(cellXOffset-32,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,"/",(cellXOffset-58,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
 							DrawString(yggdraFont,FormatNumber(CR_SCF_Count,2,2),(cellXOffset-64,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
 							cellXOffset -= 96;
 							break;
@@ -426,6 +536,19 @@ class YggdrasilHUD : BaseStatusBar
 					CRCompactMode = true;
 				} else {
 					CRCompactMode = false;
+				}
+				
+				CRPacing = LDH.tPacing;
+				CRElapsedT = (LDH.tElapsed % 35) * 1000.0 / 35;
+				CRElapsedS = LDH.tElapsed / 35;
+				CRElapsedM = CRElapsedS / 60;
+				CRElapsedH = CRElapsedM / 60;
+				CRElapsedS %= 60;
+				CRElapsedM %= 60;
+				
+				if ( LDH.tElapsed <= 1 ) {
+					CRParS = (LDH.tb3Star / 35) % 60;
+					CRParM = LDH.tb3Star / 2100;
 				}
 			}
 		}

@@ -328,19 +328,34 @@ class LevelDataHandler : EventHandler
 	int	totalBosses;
 	int	killedBosses;
 	int	bossCellCount;
+	int tbSucks;
+	int tb1Star;
+	int tb2Star;
+	int tb3Star;
+	int	tbSpeedrun;
+	int	tElapsed;
+	int tPacing;
 	
 	override void WorldLoaded (WorldEvent e)
 	{
 		// Initialize Values
 		totalSecrets = level.Total_Secrets;
 		foundSecrets = 0;
-		secretCellCount = floor(totalSecrets ** (1.0/3.0));
+		secretCellCount = floor(totalSecrets ** (1.0/2.0));
 		totalMonsters = 0;
 		killedMonsters = 0;
 		monsterCellCount = 0;
 		totalBosses = 0;
 		killedBosses = 0;
 		bossCellCount = 0;
+		tElapsed = 0;
+		tPacing = 5;
+		// Calculate threshold times
+		tbSucks = ( !level.SuckTime ) ? 126000 : level.SuckTime*126000;
+		tb3Star = ( !level.ParTime  ) ? ((level.Total_Monsters * 42)/35)*35 : level.ParTime*35;
+		tb1Star = ((( tbSucks + tb3Star) / 2)/35)*35;
+		tb2Star = ((((2 * tb3Star) + tb1Star) / 3)/35)*35;
+		tbSpeedrun = ((round(tb3Star * 0.618)+34)/35)*35;
 	}
 	
 	override void WorldUnloaded (WorldEvent e)
@@ -348,11 +363,70 @@ class LevelDataHandler : EventHandler
 		// Calculate and award earned CR
 		int totalAwards = 0;
 		double awardMultiplier = 1.0;
+		double epsilon = 0.005;			// Needed for floating point rounding errors.
+		// Tally up the number of filled cells
 		if (totalBosses > 0) { totalAwards += ((killedBosses * bossCellCount)/totalBosses); }
 		if (totalMonsters > 0) { totalAwards += ((killedMonsters * monsterCellCount)/totalMonsters); }
 		if (totalSecrets > 0) { totalAwards += ((foundSecrets * secretCellCount)/totalSecrets); }
-		if (totalAwards >= ( bossCellCount + monsterCellCount + secretCellCount)) { awardMultiplier += 1.0; }
-		totalAwards = floor(totalAwards * awardMultiplier);
+		// Completionist award multipliers.
+		if ( killedBosses == totalBosses ) {
+			awardMultiplier += 0.20;
+		} else if (((killedBosses * 1.0)/totalBosses) > 0.75) { 
+			awardMultiplier += 0.10;
+		}
+		if ( killedMonsters == totalMonsters ) {
+			awardMultiplier += 0.30;
+		} else if (((killedMonsters * 1.0)/totalMonsters) > 0.75) {
+			awardMultiplier += 0.15;
+		}
+		if ( foundSecrets == totalSecrets ) {
+			awardMultiplier += 0.20;
+		} else if (((foundSecrets * 1.0)/totalSecrets) > 0.75) {
+			awardMultiplier += 0.10;
+		}
+		if (totalAwards >= ( bossCellCount + monsterCellCount + secretCellCount)) { awardMultiplier += 0.30; }
+		// Speed awards.
+		switch (tPacing) {
+			case 5:
+				totalAwards += 3;
+				awardMultiplier += 2.0;
+				break;
+			case 4:
+				totalAwards += 2;
+				awardMultiplier += 1.0;
+				break;
+			case 3:
+				totalAwards += 1;
+				awardMultiplier += 0.5;
+				break;
+			case 2:
+				awardMultiplier += 0.25;
+				break;
+			case 0:
+				totalAwards = MAX(totalAwards - 1,0);
+				break;
+		}
+		// Skill modifiers.
+		switch (skill) {
+			case 0:
+				awardMultiplier *= 0.25;
+				break;
+			case 1:
+				awardMultiplier *= 0.5;
+				break;
+			case 2:
+				awardMultiplier *= 1.0;
+				break;
+			case 3:
+				awardMultiplier *= 1.5;
+				break;
+			case 4:
+				awardMultiplier *= 2.5;
+				break;
+		}
+		// Tally up the total.
+		totalAwards = floor(totalAwards * (awardMultiplier + epsilon));
+		// Finally, grant awards to every player.
 		for (int index = 0; index < MAXPLAYERS; ++index) {
 			if (!PlayerInGame[index])
 				continue;
@@ -418,8 +492,16 @@ class LevelDataHandler : EventHandler
 		// Derive the number of bars to display for monsters and bosses.
 		// And also keep track of found secrets.
 		foundSecrets = level.Found_Secrets;
-		monsterCellCount = floor(totalMonsters ** (1.0/4.0));
-		bossCellCount = floor(totalBosses ** (1.0/3.0));
+		monsterCellCount = floor(totalMonsters ** (1.0/3.5));
+		bossCellCount = floor(totalBosses ** (1.0/2.5));
+		
+		if (tElapsed <= tbSpeedrun) { tPacing = 5; }
+		if (tElapsed > tbSpeedrun && tElapsed <= tb3Star) { tPacing = 4; }
+		if (tElapsed > tb3Star && tElapsed <= tb2Star) { tPacing = 3; }
+		if (tElapsed > tb2Star && tElapsed <= tb1Star) { tPacing = 2; }
+		if (tElapsed > tb1Star && tElapsed <= tbSucks) { tPacing = 1; }
+		if (tElapsed > tbSucks) { tPacing = 0; }
+		++tElapsed;
 	}
 }
 // Combat Rank Item
