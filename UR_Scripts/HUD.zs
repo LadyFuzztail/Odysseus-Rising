@@ -77,6 +77,10 @@ class YggdrasilHUD : BaseStatusBar
 	int CRPacing;
 	string CRSpeedRank;
 	
+	double MIGravity;
+	int	MIGravInt;
+	int	MIGravFrac;
+	
 	override void Init()
 	{
 		super.Init();
@@ -137,6 +141,10 @@ class YggdrasilHUD : BaseStatusBar
 		CRParS = 0;
 		CRTextColo = Font.CR_Untranslated;
 		CRSpeedRank = "F";	
+		
+		MIGravity = 38.28125;
+		MIGravInt = 38;
+		MIGravFrac = 28125;
 	}
 	
 	override void Draw(int state, double TicFrac)
@@ -417,6 +425,11 @@ class YggdrasilHUD : BaseStatusBar
 	// To convert DoomGravity to IRL units, multiply it by 0.0122583125, if 800 is earth gravity.
 	// If we take 32 VMU to be 1 metre, then the actual strength of DoomGravity is 38.28125.
 	// This means the conversion from DGU to N is 0.0478515625
+	int MIGravX = 32;
+	DrawString(yggdraFont,FormatNumber(MIGravInt,2,2),(MIGravX+24,103),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_RIGHT);
+	DrawString(yggdraFont,FormatNumber(MIGravFrac,2,2,2),(MIGravX+26,112),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
+	DrawString(yggdraFont,"Nkg",(MIGravX+44,103),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT);
+	DrawString(yggdraFont,"-1",(MIGravX+76,103),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
 	}
 	
 	override void Tick()
@@ -556,6 +569,9 @@ class YggdrasilHUD : BaseStatusBar
 					CRParM = CRTTB / 126000;
 				}
 			}
+			MIGravity = Level.Gravity * 0.0478515625;
+			MIGravInt = Int(MiGravity);
+			MIGravFrac = (MIGravity - MIGravInt)*100;
 		}
 	}
 }
