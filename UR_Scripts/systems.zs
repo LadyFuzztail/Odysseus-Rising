@@ -351,10 +351,10 @@ class LevelDataHandler : EventHandler
 		tElapsed = 0;
 		tPacing = 5;
 		// Calculate threshold times
-		tbSucks = ( !level.SuckTime ) ? 126000 : level.SuckTime*126000;
-		tb3Star = ( !level.ParTime  ) ? ((level.Total_Monsters * 42)/35)*35 : level.ParTime*35;
-		tb1Star = ((( tbSucks + tb3Star) / 2)/35)*35;
-		tb2Star = ((((2 * tb3Star) + tb1Star) / 3)/35)*35;
+		tb3Star = ( !level.ParTime  ) ? ((level.Total_Monsters * 45)/35)*35 : level.ParTime*35;
+		tbSucks = ( !level.SuckTime ) ? ((MAX(tb3Star*4,126000)+125999)/126000)*126000 : level.SuckTime*126000;
+		tb1Star = ((( tbSucks + (3 * tb3Star)) / 4)/35)*35;
+		tb2Star = ((tb3Star + tb1Star / 2)/35)*35;
 		tbSpeedrun = ((round(tb3Star * 0.618)+34)/35)*35;
 	}
 	
@@ -388,11 +388,11 @@ class LevelDataHandler : EventHandler
 		// Speed awards.
 		switch (tPacing) {
 			case 5:
-				totalAwards += 3;
+				totalAwards += 5;
 				awardMultiplier += 2.0;
 				break;
 			case 4:
-				totalAwards += 2;
+				totalAwards += 3;
 				awardMultiplier += 1.0;
 				break;
 			case 3:
