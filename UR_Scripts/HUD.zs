@@ -422,6 +422,63 @@ class YggdrasilHUD : BaseStatusBar
 		}
 		// DrawString(yggdrafont,FormatNumber(LDH.killedMonsters+LDH.killedBosses,3),(-32,110),DI_SCREEN_RIGHT|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
 	// Mission info segment
+	// Draw map name
+	DrawString(yggdraFont,Level.MapName,(40,39),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
+	SetClipRect(112,32,240,32);
+	DrawString(yggdraFont,Level.LevelName,(112,39),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
+	ClearClipRect();
+	// Draw Keys
+	bool keys[13];
+	string keyImage;
+	string keyBG;
+	int keyXOffset = 32;
+	int keysDrawn = 0;
+	for ( int keyIndex = 0; keyIndex < 13; keyIndex++ ) {
+		keys[keyIndex] = CPlayer.mo.CheckKeys(keyIndex +1, false, true);	
+	}
+	for ( int keyIndex = 0; keyIndex < 13; keyIndex++ ) {
+		if ( keys[keyIndex] ) {
+				Switch (keyIndex) {
+					case 0:
+						keyImage = "RKEYA0";
+						keyBG = "MIKEYRED";
+						break;
+					case 1:
+						keyImage = "BKEYA0";
+						keyBG = "MIKEYBLU";
+						break;
+					case 2:
+						keyImage = "YKEYA0";
+						keyBG = "MIKEYELO";
+						break;
+					case 3:
+						keyImage = "RSKUA0";
+						keyBG = "MIKEYRED";
+						break;
+					case 4:
+						keyImage = "BSKUA0";
+						keyBG = "MIKEYBLU";
+						break;
+					case 5:
+						keyImage = "YSKUA0";
+						keyBG = "MIKEYELO";
+						break;
+					default:
+						keyImage = "";
+						keyBG = "MIKEYNON";
+						break;
+				}
+				DrawImage(keyBG,(keyXOffset,64),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3,(-1,-1),(1.0,1.0),STYLE_Add);
+				DrawImage(keyImage,(keyXOffset+12,80),DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add);
+				keyXOffset += 24;
+				++keysDrawn;
+			}
+		}
+		while ( keysDrawn < 13 ) {
+			DrawImage("MIKEYNON",(keyXOffset,64),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3);
+			keyXOffset += 24;
+			++keysDrawn;
+		}
 	// To convert DoomGravity to IRL units, multiply it by 0.0122583125, if 800 is earth gravity.
 	// If we take 32 VMU to be 1 metre, then the actual strength of DoomGravity is 38.28125.
 	// This means the conversion from DGU to N is 0.0478515625
