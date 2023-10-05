@@ -431,57 +431,47 @@ class YggdrasilHUD : BaseStatusBar
 	DrawString(yggdraFont,Level.LevelName,(112,39),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
 	ClearClipRect();
 	// Draw Keys
-	bool keys[13];
-	string keyImage;
-	string keyBG;
+	string keyImage[13] = { "RKEYA0", "BKEYA0", "YKEYA0", "RSKUA0", "BSKUA0", "YSKUA0", "", "", "", "", "", "", ""};
+	string keyBG[13] = { "MIKEYRED", "MIKEYBLU", "MIKEYELO", "MIKEYRED", "MIKEYBLU", "MIKEYELO", "MIKEYNON", "MIKEYNON", "MIKEYNON", "MIKEYNON", "MIKEYNON", "MIKEYNON", "MIKEYNON" } ;
 	int keyXOffset = 32;
 	int keysDrawn = 0;
-	for ( int keyIndex = 0; keyIndex < 13; keyIndex++ ) {
-		keys[keyIndex] = CPlayer.mo.CheckKeys(keyIndex +1, false, true);	
-	}
-	for ( int keyIndex = 0; keyIndex < 13; keyIndex++ ) {
-		if ( keys[keyIndex] ) {
-				Switch (keyIndex) {
-					case 0:
-						keyImage = "RKEYA0";
-						keyBG = "MIKEYRED";
-						break;
-					case 1:
-						keyImage = "BKEYA0";
-						keyBG = "MIKEYBLU";
-						break;
-					case 2:
-						keyImage = "YKEYA0";
-						keyBG = "MIKEYELO";
-						break;
-					case 3:
-						keyImage = "RSKUA0";
-						keyBG = "MIKEYRED";
-						break;
-					case 4:
-						keyImage = "BSKUA0";
-						keyBG = "MIKEYBLU";
-						break;
-					case 5:
-						keyImage = "YSKUA0";
-						keyBG = "MIKEYELO";
-						break;
-					default:
-						keyImage = "";
-						keyBG = "MIKEYNON";
-						break;
+	key keys;
+	
+	for (int keyIndex = 0; keyIndex < 13; ++keyIndex) {
+		if ( (keys = Key(CPlayer.mo.FindInventory(Key.GetKeyType(keyIndex)))) ) {
+			TextureID keyIcon;
+			if (keys) {
+				TextureID altKey = keys.AltHUDIcon;
+				if (altKey.Exists()) {
+					if (altKey.isValid()) {
+						keyIcon = altKey;
+					} else if (keys.SpawnState && keys.SpawnState.sprite != 0) {
+						let keyState = keys.SpawnState;
+						if ( keyState != null ) {
+							keyIcon = keyState.GetSpriteTexture(0);
+						} else {
+							keyIcon.SetNull();
+						}
+					}
+					if (keyIcon.isNull() || keyIcon == TexMan.CheckForTexture("TNT1A0", TexMan.Type_Sprite)) {
+						keyIcon = TexMan.CheckForTexture(keyImage[keyIndex], TexMan.Type_Sprite);
+					}
+					if (keyIcon.isValid()) {
+						string keyIconStr = TexMan.GetName(keyIcon);
+						DrawImage(keyBG[keyIndex],(keyXOffset,64),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3,(-1,-1),(1.0,1.0),STYLE_Add);
+						DrawImage(keyIconStr,(keyXOffset+12,80),DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add);
+						keyXOffset += 24;
+						++keysDrawn;
+					}
 				}
-				DrawImage(keyBG,(keyXOffset,64),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3,(-1,-1),(1.0,1.0),STYLE_Add);
-				DrawImage(keyImage,(keyXOffset+12,80),DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add);
-				keyXOffset += 24;
-				++keysDrawn;
 			}
 		}
-		while ( keysDrawn < 13 ) {
-			DrawImage("MIKEYNON",(keyXOffset,64),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3);
-			keyXOffset += 24;
-			++keysDrawn;
-		}
+	}
+	while ( keysDrawn < 13 ) {
+		DrawImage("MIKEYNON",(keyXOffset,64),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3);
+		keyXOffset += 24;
+		++keysDrawn;
+	}
 	// To convert DoomGravity to IRL units, multiply it by 0.0122583125, if 800 is earth gravity.
 	// If we take 32 VMU to be 1 metre, then the actual strength of DoomGravity is 38.28125.
 	// This means the conversion from DGU to N is 0.0478515625
