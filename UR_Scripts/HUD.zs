@@ -1,6 +1,7 @@
 class YggdrasilHUD : BaseStatusBar
 {
 	HUDFont yggdraFont;
+	HUDFont yggdraFontShadow;
 	DynamicValueInterpolator interpSP;
 	DynamicValueInterpolator interpHP;
 	DynamicValueInterpolator interpAC;
@@ -86,7 +87,8 @@ class YggdrasilHUD : BaseStatusBar
 		super.Init();
 		
 		font yggdraSmall = "yggsmal2";
-		yggdraFont = HUDFont.Create(yggdraSmall,0,0,2,2);
+		yggdraFont = HUDFont.Create(yggdraSmall,0,false,2,2);
+		yggdraFontShadow = HUDFont.Create(yggdraSmall,0,false,0,0);
 		
 		interpSP = DynamicValueInterpolator.Create(0,0.5,1,20);
 		interpHP = DynamicValueInterpolator.Create(0,0.5,1,15);
@@ -480,6 +482,10 @@ class YggdrasilHUD : BaseStatusBar
 	DrawString(yggdraFont,FormatNumber(MIGravFrac,2,2,2),(MIGravX+26,112),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
 	DrawString(yggdraFont,"Nkg",(MIGravX+44,103),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT);
 	DrawString(yggdraFont,"-1",(MIGravX+76,103),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
+	// Weapons Bar
+	DrawImage("WBCKPLAT",(0,-32),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER_BOTTOM,0.5);
+	DrawImage("WTMPLATE",(0,-32),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER_BOTTOM,1.0,(-1,-1),(1.0,1.0),STYLE_Add);
+	DrawString(yggdraFontShadow,"WPN",(0,-83),DI_SCREEN_CENTER_BOTTOM|DI_TEXT_ALIGN_CENTER,Font.CR_Black,1.0,-1,4,(1.0,0.5));
 	}
 	
 	override void Tick()

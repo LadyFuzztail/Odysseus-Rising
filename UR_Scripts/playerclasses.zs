@@ -56,6 +56,6 @@ class CommandoPawn : URPlayer
 		URPlayer.spDelay		140;
 		URPlayer.apBase			35;
 		URPlayer.apMax			300;
-		URPlayer.npMax			100;
+		URPlayer.npMax			200;
 	}
 }
