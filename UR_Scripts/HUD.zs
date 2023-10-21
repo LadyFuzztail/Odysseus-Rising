@@ -2,6 +2,7 @@ class YggdrasilHUD : BaseStatusBar
 {
 	HUDFont yggdraFont;
 	HUDFont yggdraFontShadow;
+	
 	DynamicValueInterpolator interpSP;
 	DynamicValueInterpolator interpHP;
 	DynamicValueInterpolator interpAC;
@@ -19,6 +20,8 @@ class YggdrasilHUD : BaseStatusBar
 	int	acPercent;
 	int npNum;
 	
+	string currWeaponTag;
+	int weaponIndex;
 	inventory GCA;
 	DynamicValueInterpolator interpCWeap;
 	DynamicValueInterpolator interpCWAmount;
@@ -105,6 +108,8 @@ class YggdrasilHUD : BaseStatusBar
 		apNum = 0;
 		acPercent = 0;
 		
+		currWeaponTag = "";
+		weaponIndex = 0;
 		interpCWeap = DynamicValueInterpolator.Create(0,0.5,1,40);
 		interpCWAmount = DynamicValueInterpolator.Create(0,0.5,1,50);
 		ammoFrac = 0.;
@@ -212,30 +217,36 @@ class YggdrasilHUD : BaseStatusBar
 		} else {
 			DrawBar("CWEAPBAR","CWEAPOFF",interpCWeap.GetValue(),190,(-33,-33),0,1,DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM,0.5);
 		}
-		string currWeaponTag = GetWeaponTag();
-		if (currWeaponTag == "Chainsaw") {
-			DrawImage("CHAINHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
-		}
-		if (currWeaponTag == "Pistol") {
-			DrawImage("PISTLHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
-		}
-		if (currWeaponTag == "Shotgun") {
-			DrawImage("SHTGNHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
-		}
-		if (currWeaponTag == "Super Shotgun") {
-			DrawImage("SUPSGHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
-		}
-		if (currWeaponTag == "Chaingun") {
-			DrawImage("CHGUNHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
-		}
-		if (currWeaponTag == "Rocket Launcher") {
-			DrawImage("RLAUNHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
-		}
-		if (currWeaponTag == "Plasma Rifle") {
-			DrawImage("PLASMHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
-		}
-		if (currWeaponTag == "BFG 9000") {
-			DrawImage("BFGEEHUD",(-128,-34),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER_BOTTOM);
+		switch (weaponIndex) {
+			case 1:
+				DrawImage("FISTHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+				break;
+			case 2:
+				DrawImage("CHAINHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+				break;
+			case 3:
+				DrawImage("PISTLHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+				break;
+			case 4:
+				DrawImage("SHTGNHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+				break;
+			case 5:
+				DrawImage("SUPSGHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+				break;
+			case 6:
+				DrawImage("CHGUNHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+				break;
+			case 7:
+				DrawImage("RLAUNHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+				break;
+			case 8:
+				DrawImage("PLASMHUD",(-128,-48),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER);
+				break;
+			case 9:
+				DrawImage("BFGEEHUD",(-128,-34),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER_BOTTOM);
+				break;
+			default:
+				break;
 		}
 		int ammoXOffset = -224;
 		int ammoBarIndex = 0;
@@ -328,39 +339,39 @@ class YggdrasilHUD : BaseStatusBar
 				CRSpeedRank = "F";
 				break;
 		}
-		int timeXAnchor = -344;
-		DrawString(yggdraFont,FormatNumber(CRElapsedH,1,1,2),(timeXAnchor,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,":",(timeXAnchor+14,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,FormatNumber(CRElapsedM,2,2,2),(timeXAnchor+20,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,":",(timeXAnchor+46,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,FormatNumber(CRElapsedS,2,2,2),(timeXAnchor+52,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,FormatNumber(CRElapsedT,3,3,2),(timeXAnchor+78,48),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(0.5,0.5));
-		DrawString(yggdraFont,"/",(timeXAnchor+102,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(timeXAnchor+112,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,":",(timeXAnchor+138,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(timeXAnchor+144,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		int timeXAnchor = -328;
+		DrawString(yggdraFont,FormatNumber(CRElapsedH,1,1,2),(timeXAnchor,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,":",(timeXAnchor+14,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,FormatNumber(CRElapsedM,2,2,2),(timeXAnchor+20,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,":",(timeXAnchor+46,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,FormatNumber(CRElapsedS,2,2,2),(timeXAnchor+52,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,FormatNumber(CRElapsedT,3,3,2),(timeXAnchor+78,32),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(0.5,0.5));
+		DrawString(yggdraFont,"/",(timeXAnchor+102,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(timeXAnchor+112,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,":",(timeXAnchor+138,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(timeXAnchor+144,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
 //		DrawString(yggdraFont,FormatNumber(skill,1,1),(-144,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
 		// Draw the pacing/speed rank.
-		DrawString(yggdraFont,CRSpeedRank,(-44,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,CRTextColo,0.9,-1,4,(1.5,1.0));
-		DrawImage("CRSRICON",(-72,28),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+		DrawString(yggdraFont,CRSpeedRank,(-28,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,CRTextColo,0.9,-1,4,(1.5,1.0));
+		DrawImage("CRSRICON",(-56,12),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
 		// Draw the CR
 		DrawString(yggdraFont,FormatNumber(GetAmount("CombatRank"),3),(-32,103),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
-		DrawImage("CRBONICO",(-80,100),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+		DrawImage("CRBONICO",(-64,84),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
 		// Draw the cells
-		int cellXOffset = -32;
+		int cellXOffset = -16;
 		if ( !CRCompactMode) {
 			for ( int cellIndex = 0; cellIndex < 13; ++cellIndex ) {
 				if (cellIndex < LDH.bossCellCount) {
-					DrawImage("CRBOSSBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-					DrawBar("CRBOSBAR","CRBOSOFF",MIN(MAX((CRBossCellsFilled - (cellIndex * 1.)),0.0),1.0),1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+					DrawImage("CRBOSSBR",(cellXOffset,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+					DrawBar("CRBOSBAR","CRBOSOFF",MIN(MAX((CRBossCellsFilled - (cellIndex * 1.)),0.0),1.0),1.0,(cellXOffset-1,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
 				} else if (cellIndex < (LDH.monsterCellCount + LDH.bossCellCount)) {
-					DrawImage("CRKILLBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-					DrawBar("CRKILBAR","CRKILOFF",MIN(MAX((CRKillCellsFilled - ((cellIndex - LDH.bossCellCount) * 1.)),0.0),1.0),1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+					DrawImage("CRKILLBR",(cellXOffset,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+					DrawBar("CRKILBAR","CRKILOFF",MIN(MAX((CRKillCellsFilled - ((cellIndex - LDH.bossCellCount) * 1.)),0.0),1.0),1.0,(cellXOffset-1,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
 				} else if (cellIndex < CRCellCount) {
-					DrawImage("CRSCRYBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-					DrawBar("CRSCRBAR","CRSCROFF",MIN(MAX((CRScryCellsFilled - ((cellIndex - LDH.bossCellCount - LDH.monsterCellCount) * 1.)),0.0),1.0),1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+					DrawImage("CRSCRYBR",(cellXOffset,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+					DrawBar("CRSCRBAR","CRSCROFF",MIN(MAX((CRScryCellsFilled - ((cellIndex - LDH.bossCellCount - LDH.monsterCellCount) * 1.)),0.0),1.0),1.0,(cellXOffset-1,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
 				} else {
-					DrawImage("CREMPTYB",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.3);
+					DrawImage("CREMPTYB",(cellXOffset,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.3);
 				}
 				cellXOffset -= 24;
 			}
@@ -376,15 +387,15 @@ class YggdrasilHUD : BaseStatusBar
 				{
 					case 0:
 						if (LDH.bossCellCount > 0) {
-							DrawImage("CRBOSSBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRBOSBAR","CRBOSOFF",0.0,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawImage("CRBOSSBR",(cellXOffset-2,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRBOSBAR","CRBOSOFF",0.0,1.0,(cellXOffset-3,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawImage("CRBOSSBR",(cellXOffset-4,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRBOSBAR","CRBOSOFF",CR_BCF_Fract,1.0,(cellXOffset-5,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawString(yggdraFont,FormatNumber(LDH.bossCellCount,2,2),(cellXOffset-32,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
-							DrawString(yggdraFont,"/",(cellXOffset-58,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
-							DrawString(yggdraFont,FormatNumber(CR_BCF_Count,2,2),(cellXOffset-64,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
+							DrawImage("CRBOSSBR",(cellXOffset,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRBOSBAR","CRBOSOFF",0.0,1.0,(cellXOffset-1,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRBOSSBR",(cellXOffset-2,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRBOSBAR","CRBOSOFF",0.0,1.0,(cellXOffset-3,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRBOSSBR",(cellXOffset-4,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRBOSBAR","CRBOSOFF",CR_BCF_Fract,1.0,(cellXOffset-5,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawString(yggdraFont,FormatNumber(LDH.bossCellCount,2,2),(cellXOffset-32,55),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,"/",(cellXOffset-58,55),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,FormatNumber(CR_BCF_Count,2,2),(cellXOffset-64,55),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Red,1.0,-1,4,(1.0,1.0));
 							cellXOffset -= 96;
 							break;
 						} else {
@@ -392,15 +403,15 @@ class YggdrasilHUD : BaseStatusBar
 						}
 					case 1:
 						if (LDH.monsterCellCount > 0) {
-							DrawImage("CRKILLBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRKILBAR","CRKILOFF",0.0,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawImage("CRKILLBR",(cellXOffset-2,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRKILBAR","CRKILOFF",0.0,1.0,(cellXOffset-3,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawImage("CRKILLBR",(cellXOffset-4,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRKILBAR","CRKILOFF",CR_KCF_Fract,1.0,(cellXOffset-5,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawString(yggdraFont,FormatNumber(LDH.monsterCellCount,2,2),(cellXOffset-32,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
-							DrawString(yggdraFont,"/",(cellXOffset-58,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
-							DrawString(yggdraFont,FormatNumber(CR_KCF_Count,2,2),(cellXOffset-64,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
+							DrawImage("CRKILLBR",(cellXOffset,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRKILBAR","CRKILOFF",0.0,1.0,(cellXOffset-1,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRKILLBR",(cellXOffset-2,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRKILBAR","CRKILOFF",0.0,1.0,(cellXOffset-3,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRKILLBR",(cellXOffset-4,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRKILBAR","CRKILOFF",CR_KCF_Fract,1.0,(cellXOffset-5,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawString(yggdraFont,FormatNumber(LDH.monsterCellCount,2,2),(cellXOffset-32,55),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,"/",(cellXOffset-58,55),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,FormatNumber(CR_KCF_Count,2,2),(cellXOffset-64,55),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Sapphire,1.0,-1,4,(1.0,1.0));
 							cellXOffset -= 96;
 							break;
 						} else {
@@ -408,15 +419,15 @@ class YggdrasilHUD : BaseStatusBar
 						}
 					case 2:
 						if (LDH.secretCellCount > 0) {
-							DrawImage("CRSCRYBR",(cellXOffset,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRSCRBAR","CRSCROFF",0.0,1.0,(cellXOffset-1,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawImage("CRSCRYBR",(cellXOffset-2,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRSCRBAR","CRSCROFF",0.0,1.0,(cellXOffset-3,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawImage("CRSCRYBR",(cellXOffset-4,64),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
-							DrawBar("CRSCRBAR","CRSCROFF",CR_SCF_Fract,1.0,(cellXOffset-5,65),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
-							DrawString(yggdraFont,FormatNumber(LDH.secretCellCount,2,2),(cellXOffset-32,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
-							DrawString(yggdraFont,"/",(cellXOffset-58,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
-							DrawString(yggdraFont,FormatNumber(CR_SCF_Count,2,2),(cellXOffset-64,71),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
+							DrawImage("CRSCRYBR",(cellXOffset,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRSCRBAR","CRSCROFF",0.0,1.0,(cellXOffset-1,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRSCRYBR",(cellXOffset-2,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRSCRBAR","CRSCROFF",0.0,1.0,(cellXOffset-3,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawImage("CRSCRYBR",(cellXOffset-4,48),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
+							DrawBar("CRSCRBAR","CRSCROFF",CR_SCF_Fract,1.0,(cellXOffset-5,49),0,3,DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP,0.75);
+							DrawString(yggdraFont,FormatNumber(LDH.secretCellCount,2,2),(cellXOffset-32,55),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,"/",(cellXOffset-58,55),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
+							DrawString(yggdraFont,FormatNumber(CR_SCF_Count,2,2),(cellXOffset-64,55),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Purple,1.0,-1,4,(1.0,1.0));
 							cellXOffset -= 96;
 							break;
 						} else {
@@ -428,14 +439,14 @@ class YggdrasilHUD : BaseStatusBar
 		// DrawString(yggdrafont,FormatNumber(LDH.killedMonsters+LDH.killedBosses,3),(-32,110),DI_SCREEN_RIGHT|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
 	// Mission info segment
 	// Draw map name
-	DrawString(yggdraFont,Level.MapName,(40,39),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
-	SetClipRect(112,32,232,32);
-	DrawString(yggdraFont,Level.LevelName,(112,39),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
+	DrawString(yggdraFont,Level.MapName,(24,23),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
+	SetClipRect(96,16,248,32);
+	DrawString(yggdraFont,Level.LevelName,(96,23),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
 	ClearClipRect();
 	// Draw Keys
 	string keyImage[13] = { "RKEYA0", "BKEYA0", "YKEYA0", "RSKUA0", "BSKUA0", "YSKUA0", "", "", "", "", "", "", ""};
 	string keyBG[13] = { "MIKEYRED", "MIKEYBLU", "MIKEYELO", "MIKEYRED", "MIKEYBLU", "MIKEYELO", "MIKEYNON", "MIKEYNON", "MIKEYNON", "MIKEYNON", "MIKEYNON", "MIKEYNON", "MIKEYNON" } ;
-	int keyXOffset = 32;
+	int keyXOffset = 16;
 	int keysDrawn = 0;
 	key keys;
 	
@@ -460,8 +471,8 @@ class YggdrasilHUD : BaseStatusBar
 					}
 					if (keyIcon.isValid()) {
 						string keyIconStr = TexMan.GetName(keyIcon);
-						DrawImage(keyBG[keyIndex],(keyXOffset,64),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3,(-1,-1),(1.0,1.0),STYLE_Add);
-						DrawImage(keyIconStr,(keyXOffset+12,80),DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add);
+						DrawImage(keyBG[keyIndex],(keyXOffset,48),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3,(-1,-1),(1.0,1.0),STYLE_Add);
+						DrawImage(keyIconStr,(keyXOffset+12,64),DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add);
 						keyXOffset += 24;
 						++keysDrawn;
 					}
@@ -470,21 +481,61 @@ class YggdrasilHUD : BaseStatusBar
 		}
 	}
 	while ( keysDrawn < 13 ) {
-		DrawImage("MIKEYNON",(keyXOffset,64),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3);
+		DrawImage("MIKEYNON",(keyXOffset,48),DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT_TOP,0.3);
 		keyXOffset += 24;
 		++keysDrawn;
 	}
 	// To convert DoomGravity to IRL units, multiply it by 0.0122583125, if 800 is earth gravity.
 	// If we take 32 VMU to be 1 metre, then the actual strength of DoomGravity is 38.28125.
 	// This means the conversion from DGU to N is 0.0478515625
-	int MIGravX = 32;
-	DrawString(yggdraFont,FormatNumber(MIGravInt,2,2),(MIGravX+24,103),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_RIGHT);
-	DrawString(yggdraFont,FormatNumber(MIGravFrac,2,2,2),(MIGravX+26,112),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
-	DrawString(yggdraFont,"Nkg",(MIGravX+44,103),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT);
-	DrawString(yggdraFont,"-1",(MIGravX+76,103),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
+	int MIGravX = 16;
+	DrawString(yggdraFont,FormatNumber(MIGravInt,2,2),(MIGravX+24,87),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_RIGHT);
+	DrawString(yggdraFont,FormatNumber(MIGravFrac,2,2,2),(MIGravX+26,96),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
+	DrawString(yggdraFont,"Nkg",(MIGravX+44,87),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT);
+	DrawString(yggdraFont,"-1",(MIGravX+76,87),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
 	// Weapons Bar
 	DrawImage("WBCKPLAT",(0,-16),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER_BOTTOM,0.5);
 	DrawImage("WTMPLATE",(0,-16),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER_BOTTOM,1.0,(-1,-1),(1.0,1.0),STYLE_Add);
+	switch (weaponIndex) {
+			case 1:
+				DrawImage("WSELBLU",(-165,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,0.6,(-1,-1),(1.0,1.0),STYLE_Add);
+				break;
+			case 2:
+				DrawImage("WSELBLU",(-147,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,0.6,(-1,-1),(1.0,1.0),STYLE_Add);
+				break;
+			case 3:
+				DrawImage("WSELYEL2",(-80,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,0.6,(-1,-1),(1.0,1.0),STYLE_Add);
+				break;
+			case 4:
+				DrawImage("WSELORNG",(-13,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,0.6,(-1,-1),(1.0,1.0),STYLE_Add);
+				break;
+			case 5:
+				DrawImage("WSELORNG",(5,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,0.6,(-1,-1),(1.0,1.0),STYLE_Add);
+				break;
+			case 6:
+				DrawImage("WSELYELO",(67,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,0.6,(-1,-1),(1.0,1.0),STYLE_Add);
+				break;
+			case 7:
+				DrawImage("WSELRED",(85,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,0.6,(-1,-1),(1.0,1.0),STYLE_Add);
+				break;
+			case 8:
+				DrawImage("WSELPURP",(147,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,0.6,(-1,-1),(1.0,1.0),STYLE_Add);
+				break;
+			case 9:
+				DrawImage("WSELPURP",(165,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,0.6,(-1,-1),(1.0,1.0),STYLE_Add);
+				break;
+			default:
+				break;
+		}
+	if (CPlayer.mo.FindInventory("Fist")) { DrawImage("WFIST",(-165,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
+	if (CPlayer.mo.FindInventory("Chainsaw")) { DrawImage("WCSAW",(-147,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
+	if (CPlayer.mo.FindInventory("Pistol")) { DrawImage("WPISTL",(-80,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
+	if (CPlayer.mo.FindInventory("Shotgun")) { DrawImage("WSHOT",(-13,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
+	if (CPlayer.mo.FindInventory("SuperShotgun")) { DrawImage("WSHOT2",(5,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
+	if (CPlayer.mo.FindInventory("Chaingun")) { DrawImage("WCHGUN",(67,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
+	if (CPlayer.mo.FindInventory("RocketLauncher")) { DrawImage("WRLAUNCH",(85,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
+	if (CPlayer.mo.FindInventory("PlasmaRifle")) { DrawImage("WPLASM",(147,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
+	if (CPlayer.mo.FindInventory("BFG9000")) { DrawImage("WBFG9000",(165,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
 	}
 	
 	override void Tick()
@@ -520,6 +571,17 @@ class YggdrasilHUD : BaseStatusBar
 				acPercent = ACPC.drPercent;
 			}
 			// Ammo Module
+			currWeaponTag = GetWeaponTag();
+			if (currWeaponTag == "Brass Knuckles") { weaponIndex = 1; }
+			if (currWeaponTag == "Chainsaw") { weaponIndex = 2; }
+			if (currWeaponTag == "Pistol") { weaponIndex = 3; }
+			if (currWeaponTag == "Shotgun") { weaponIndex = 4; }
+			if (currWeaponTag == "Super Shotgun") { weaponIndex = 5; }
+			if (currWeaponTag == "Chaingun") { weaponIndex = 6; }
+			if (currWeaponTag == "Rocket Launcher") { weaponIndex = 7; }
+			if (currWeaponTag == "Plasma Rifle") { weaponIndex = 8; }
+			if (currWeaponTag == "BFG 9000") { weaponIndex = 9; }
+			
 			GCA = GetCurrentAmmo();
 			if (GCA != NULL) {
 				currAmmo = GCA.Amount;
