@@ -355,7 +355,7 @@ class YggdrasilHUD : BaseStatusBar
 		DrawString(yggdraFont,CRSpeedRank,(-28,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,CRTextColo,0.9,-1,4,(1.5,1.0));
 		DrawImage("CRSRICON",(-56,12),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
 		// Draw the CR
-		DrawString(yggdraFont,FormatNumber(GetAmount("CombatRank"),3),(-32,103),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,FormatNumber(GetAmount("CombatRank"),3),(-16,87),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
 		DrawImage("CRBONICO",(-64,84),DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP);
 		// Draw the cells
 		int cellXOffset = -16;
