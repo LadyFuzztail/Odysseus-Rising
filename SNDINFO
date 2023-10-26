@@ -1,5 +1,13 @@
-player/shields/break	USSHBREK
+player/shields/break	USSHBRE2
 player/shields/charge	USSHCHRG
+
+$random player/shields/damage { player/shields/damage1 player/shields/damage2 player/shields/damage3 }
+player/shields/damage1 USSHDMG1
+player/shields/damage2 USSHDMG2
+player/shields/damage3 USSHDMG2
+
+$volume player/shields/damage 0.5
+
 player/shields/full		USSHFULL
 player/nanite/gateon	USNGPWON
 player/nanite/crisis	USNGCRIS

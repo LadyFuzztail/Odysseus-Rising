@@ -25,11 +25,14 @@ Mánibranðr Studios
 3maze
 2496SoundEffects
 Airborne Sound
+Audiomodern
 Blue Zone
 Chris Logsdon
+Eplex7
 fascinatedsound
 Gage Freeman
 Glitchedtones
+Heavyocity
 InspectorJ
 PMSFX
 Sound Ex Machina

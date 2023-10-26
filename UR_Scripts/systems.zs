@@ -103,8 +103,11 @@ class ShieldControl : Inventory
 			owner.TakeInventory("ShieldPoints",blockedDamage);
 			if (blockedDamage > 0 && owner.CountInv("ShieldPoints") <= 0) {
 				owner.A_StartSound("player/shields/break",0);
-				if ( owner.FindInventory("ShieldGate") )
+				if ( owner.FindInventory("ShieldGate") ) {
 					owner.TakeInventory("ShieldGate",1);
+				} 
+			} else if ( owner.CountInv("ShieldPoints") > 0 ) {
+				owner.A_StartSound("player/shields/damage",0);
 			}
 		}
 	}
