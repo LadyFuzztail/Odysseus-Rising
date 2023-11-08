@@ -536,6 +536,20 @@ class YggdrasilHUD : BaseStatusBar
 	if (CPlayer.mo.FindInventory("RocketLauncher")) { DrawImage("WRLAUNCH",(85,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
 	if (CPlayer.mo.FindInventory("PlasmaRifle")) { DrawImage("WPLASM",(147,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
 	if (CPlayer.mo.FindInventory("BFG9000")) { DrawImage("WBFG9000",(165,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
+	// Ability Bar
+	// Dummy Rendering routines for displaying the Grenade Module without data.
+	DrawImage("AMGREBOR",(288,-32),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM);
+	DrawImage("AMGREBCK",(289,-33),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.5);
+	DrawImage("AMGREICO",(320,-48),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_CENTER,0.9);
+	DrawString(yggdraFont,"[G]",(308,-29),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
+	// Risk of Rain-Style Ability Counter
+	DrawString(yggdraFontShadow,"3",(320,-86),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,1.0,-1,4,(1.0,1.0));
+	int grenadeXOffset = 345;
+	for (int GBindex = 0; GBindex < 3; ++GBindex) {
+		DrawBar("AMGCDON","AMGCDOFF",1.0,1.0,(grenadeXOffset,-33),0,3,DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.75);
+		grenadeXOffset += 24;
+	}
+	
 	}
 	
 	override void Tick()
