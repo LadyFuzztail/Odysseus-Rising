@@ -21,3 +21,5 @@ Featuring a shield and armor system, cooldown-based abilities and a grading syst
 Level design, programming, UX/UI design, sound design.  
 **Ulysses of Jupiter**  
 Level design, graphics, textures, VFX and models.  
+**Albertoni**  
+Level Design, programming, textures.  
