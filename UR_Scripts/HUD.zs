@@ -76,6 +76,7 @@ class YggdrasilHUD : BaseStatusBar
 	int	CRElapsedS;
 	double CRElapsedT;
 	int CRTextColo;
+	int CRParH;
 	int	CRParM;
 	int	CRParS;
 	int CRPacing;
@@ -144,6 +145,7 @@ class YggdrasilHUD : BaseStatusBar
 		CRElapsedM = 0;
 		CRElapsedS = 0;
 		CRElapsedT = 0.0;
+		CRParH = 0;
 		CRParM = 0;
 		CRParS = 0;
 		CRTextColo = Font.CR_Untranslated;
@@ -174,39 +176,39 @@ class YggdrasilHUD : BaseStatusBar
 		// SP Bar
 		DrawImage("SPBORDER",(0,32),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
 		DrawImage("SPBORDER",(0,32),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
-		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),207,(0,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.75);
-		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),207,(0,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.75);
+		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),223,(0,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.75);
+		DrawBar("SPBAR","SPBAROFF",interpSP.GetValue(),223,(0,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.75);
 		if ( CheckInventory("ShieldGate") ) {
-			DrawBar("SGBAR","SGBAROFF",interpSP.GetValue(),207,(0,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,1.0);
-			DrawBar("SGBAR","SGBAROFF",interpSP.GetValue(),207,(0,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,1.0);
+			DrawBar("SGBAR","SGBAROFF",interpSP.GetValue(),223,(0,33),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,1.0);
+			DrawBar("SGBAR","SGBAROFF",interpSP.GetValue(),223,(0,33),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,1.0);
 		}
 		// HP Bar
 		DrawImage("HPBORDER",(0,65),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
 		DrawImage("HPBORDER",(0,65),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
-		DrawBar("HPBAR","HPBAROFF",interpHP.GetValue(),207,(0,66),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.75);
-		DrawBar("HPBAR","HPBAROFF",interpHP.GetValue(),207,(0,66),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.75);
+		DrawBar("HPBAR","HPBAROFF",interpHP.GetValue(),223,(0,66),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.75);
+		DrawBar("HPBAR","HPBAROFF",interpHP.GetValue(),223,(0,66),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.75);
 		// AC Bar
 		DrawImage("ACBORDER",(0,48),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
 		DrawImage("ACBORDER",(0,48),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
-		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),156,(0,49),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
-		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),156,(0,49),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
+		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),172,(0,49),0,0,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.5);
+		DrawBar("ACBAR","ACBAROFF",interpAC.GetValue(),172,(0,49),0,1,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.5);
 		// NP Bar
-		DrawImage("NPBORDER",(208,32),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
-		DrawImage("NPBORDER",(-208,32),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
-		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),62,(209,33),0,3,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.75);
-		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),62,(-209,33),0,3,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.75);
+		DrawImage("NPBORDER",(224,32),DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP);
+		DrawImage("NPBORDER",(-224,32),DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP);
+		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),62,(225,33),0,3,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,0.75);
+		DrawBar("NPBAR","NPBAROFF",interpNP.GetValue(),62,(-225,33),0,3,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,0.75);
 		if ( CheckInventory("NaniteGate") ) {
-			DrawBar("HGBAR","HGBAROFF",interpNP.GetValue(),62,(209,33),0,3,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,1.0);
-			DrawBar("HGBAR","HGBAROFF",interpNP.GetValue(),62,(-209,33),0,3,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,1.0);
+			DrawBar("HGBAR","HGBAROFF",interpNP.GetValue(),62,(225,33),0,3,DI_SCREEN_CENTER_TOP|DI_ITEM_LEFT_TOP,1.0);
+			DrawBar("HGBAR","HGBAROFF",interpNP.GetValue(),62,(-225,33),0,3,DI_MIRROR|DI_SCREEN_CENTER_TOP|DI_ITEM_RIGHT_TOP,1.0);
 		}
 		// Number Texts
 		DrawString(yggdraFont,FormatNumber(hpNum,1),(0,67),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_CENTER,Font.CR_Red,0.5,-1,4,(1.0,0.5),0,STYLE_Add);
 		DrawString(yggdraFont,FormatNumber(spNum,1),(0,35),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_CENTER,Font.CR_Sapphire,0.375,-1,4,(1.0,0.5),0,STYLE_Add);
-		DrawString(yggdraFont,FormatNumber(interpAP.GetValue(),1),(-128,51),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.25,-1,4,(0.5,0.5),0,STYLE_Add);
-		DrawString(yggdraFont,FormatNumber(acPercent,2),(122,51),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Gold,0.25,-1,4,(0.5,0.5),0,STYLE_Add);
-		DrawString(yggdraFont,"%",(122,51),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.25,-1,4,(.5,.5),0,STYLE_Add);
-		DrawString(yggdraFont,FormatNumber(npNum,1),(236,71),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_CENTER,Font.CR_Orange,0.25,-1,4,(1.,1.),0,STYLE_Add);
-		DrawString(yggdraFont,FormatNumber(npNum,1),(-236,71),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_CENTER,Font.CR_Orange,0.25,-1,4,(1.,1.),0,STYLE_Add);
+		DrawString(yggdraFont,FormatNumber(interpAP.GetValue(),1),(-144,51),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.25,-1,4,(0.5,0.5),0,STYLE_Add);
+		DrawString(yggdraFont,FormatNumber(acPercent,2),(138,51),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_RIGHT,Font.CR_Gold,0.25,-1,4,(0.5,0.5),0,STYLE_Add);
+		DrawString(yggdraFont,"%",(138,51),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Gold,0.25,-1,4,(.5,.5),0,STYLE_Add);
+		DrawString(yggdraFont,FormatNumber(npNum,1),(252,71),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_CENTER,Font.CR_Orange,0.25,-1,4,(1.,1.),0,STYLE_Add);
+		DrawString(yggdraFont,FormatNumber(npNum,1),(-252,71),DI_SCREEN_CENTER_TOP|DI_TEXT_ALIGN_CENTER,Font.CR_Orange,0.25,-1,4,(1.,1.),0,STYLE_Add);
 		// Arms Segment
 		// Current Weapon Display
 		DrawImage("CWBORDER",(-32,-32),DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
@@ -347,9 +349,11 @@ class YggdrasilHUD : BaseStatusBar
 		DrawString(yggdraFont,FormatNumber(CRElapsedS,2,2,2),(timeXAnchor+52,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
 		DrawString(yggdraFont,FormatNumber(CRElapsedT,3,3,2),(timeXAnchor+78,32),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(0.5,0.5));
 		DrawString(yggdraFont,"/",(timeXAnchor+102,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(timeXAnchor+112,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,":",(timeXAnchor+138,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
-		DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(timeXAnchor+144,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,FormatNumber(CRElapsedH,1,1,2),(timeXAnchor+112,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,":",(timeXAnchor+126,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,FormatNumber(CRParM,2,2,2),(timeXAnchor+132,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,":",(timeXAnchor+158,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
+		DrawString(yggdraFont,FormatNumber(CRParS,2,2,2),(timeXAnchor+164,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,CRTextColo,0.9,-1,4,(1.0,1.0));
 //		DrawString(yggdraFont,FormatNumber(skill,1,1),(-144,39),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_DarkRed,0.9,-1,4,(1.0,1.0));
 		// Draw the pacing/speed rank.
 		DrawString(yggdraFont,CRSpeedRank,(-28,23),DI_SCREEN_RIGHT_TOP|DI_TEXT_ALIGN_RIGHT,CRTextColo,0.9,-1,4,(1.5,1.0));
@@ -440,7 +444,7 @@ class YggdrasilHUD : BaseStatusBar
 	// Mission info segment
 	// Draw map name
 	DrawString(yggdraFont,Level.MapName,(24,23),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
-	SetClipRect(96,16,248,32);
+	SetClipRect(96,16,232,32);
 	DrawString(yggdraFont,Level.LevelName,(96,23),DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(1.0,1.0));
 	ClearClipRect();
 	// Draw Keys
@@ -584,15 +588,15 @@ class YggdrasilHUD : BaseStatusBar
 		player = URPlayer(CPlayer.mo);
 		if (player) {
 			// Vitality Module
-			spFrac = (207. / player.shieldMax) * GetAmount("ShieldPoints");
+			spFrac = (223. / player.shieldMax) * GetAmount("ShieldPoints");
 			int spPix = round(spFrac);
 			interpSP.Update(spPix);
 			
-			hpFrac = (207. / CPlayer.mo.GetMaxHealth()) * CPlayer.Health;
+			hpFrac = (223. / CPlayer.mo.GetMaxHealth()) * CPlayer.Health;
 			int hpPix = round(hpFrac);
 			interpHP.Update(hpPix);
 		
-			acFrac = (156. / player.armorMax) * GetAmount("ArmorPoints");
+			acFrac = (172. / player.armorMax) * GetAmount("ArmorPoints");
 			int acPix = round(acFrac);
 			interpAC.Update(acPix);
 			
@@ -717,13 +721,9 @@ class YggdrasilHUD : BaseStatusBar
 						CRTTB = 1259965;
 						break;
 				}
-				if ( CRPacing > 1 ) {
-					CRParS = (CRTTB / 35) % 60;
-					CRParM = CRTTB / 2100;
-				} else {
-					CRParS = (CRTTB / 2100) % 60;
-					CRParM = CRTTB / 126000;
-				}
+				CRParS = (CRTTB / 35) % 60;
+				CRParM = (CRTTB / 2100) % 60;
+				CRParH = Min(1259999, CRTTB) / 126000;
 			}
 			MIGravity = Level.Gravity * 0.0478515625;
 			MIGravInt = Int(MiGravity);
