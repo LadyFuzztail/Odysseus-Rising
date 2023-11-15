@@ -11,3 +11,6 @@ $volume player/shields/damage 0.5
 player/shields/full		USSHFULL
 player/nanite/gateon	USNGPWON
 player/nanite/crisis	USNGCRIS
+
+concussiongrenade/throw		dsskeswg
+concussiongrenade/bounce	dsdbload
