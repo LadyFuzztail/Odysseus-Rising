@@ -537,17 +537,42 @@ class YggdrasilHUD : BaseStatusBar
 	if (CPlayer.mo.FindInventory("PlasmaRifle")) { DrawImage("WPLASM",(147,-65),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
 	if (CPlayer.mo.FindInventory("BFG9000")) { DrawImage("WBFG9000",(165,-31),DI_SCREEN_CENTER_BOTTOM|DI_ITEM_CENTER,1.0,(-1,-1),(1.0,1.0),STYLE_Add); }
 	// Ability Bar
-	// Dummy Rendering routines for displaying the Grenade Module without data.
+	// Dummy Rendering routines for displaying the Ability Module elements without data.
+	// Ultimate Module
+	DrawImage("AMULTBOR",(32,-32),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM);
+	DrawBar("AMULTON","AMULTOFF",1.0,1.0,(33,-33),0,0,DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.75);
+	DrawImage("AMULTICO",(128,-76),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_CENTER,0.9);
+	DrawString(yggdraFont,"[V]",(128,-29),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_CENTER,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
+	DrawString(yggdraFontShadow,"Hyperkinesis",(128,-57),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_CENTER,Font.CR_Cyan,0.75,-1,4,(1.0,1.0),0,STYLE_Add);
+	DrawString(yggdraFontShadow,"00",(198,-75),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Black,1.0,-1,4,(0.5,0.5),0,Style_Subtract);
+	DrawString(yggdraFontShadow,"100",(184,-84),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_RIGHT,Font.CR_Black,1.0,-1,4,(1.0,1.0),0,Style_Subtract);
+	DrawString(yggdraFontShadow,"%",(200,-75),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_LEFT,Font.CR_Black,1.0,-1,4,(0.5,0.5),0,Style_Subtract);
+	// Evade Module
+	DrawImage("AMDODBOR",(224,-32),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM);
+	DrawBar("AMDCDON1","AMDCDOF1",1.0,1.0,(225,-33),0,0,DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.75);
+	int abilityXOffset = 226;
+	for (int barcount = 0; barcount < 7; ++barcount) {
+		DrawBar("AMDCDON2","AMDCDOF2",1.0,1.0,(abilityXOffset,-34-(4*barcount)),0,0,DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.75);
+		++abilityXOffset;
+		DrawBar("AMDCDON3","AMDCDOF3",1.0,1.0,(abilityXOffset,-36-(4*barcount)),0,0,DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.75);
+		++abilityXOffset;
+	}
+	DrawBar("AMDCDON1","AMDCDOF2",1.0,1.0,(abilityXOffset,-62),0,0,DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.75);
+	DrawImage("AMDODICO",(260,-48),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_CENTER,0.9);
+	DrawString(yggdraFont,"[LShift]",(252,-29),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_CENTER,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
+	DrawString(yggdraFontShadow,"3",(268,-86),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_CENTER,Font.CR_Blue,1.0,-1,4,(1.0,1.0));
+	DrawString(yggdraFontShadow,"3",(268,-86),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_CENTER,Font.CR_LightBlue,0.5,-1,4,(1.0,1.0),0,STYLE_Add);
+	// Grenade Module
 	DrawImage("AMGREBOR",(288,-32),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM);
 	DrawImage("AMGREBCK",(289,-33),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.5);
 	DrawImage("AMGREICO",(320,-48),DI_SCREEN_LEFT_BOTTOM|DI_ITEM_CENTER,0.9);
-	DrawString(yggdraFont,"[G]",(308,-29),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_LEFT,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
+	DrawString(yggdraFont,"[G]",(312,-29),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_CENTER,Font.CR_Untranslated,1.0,-1,4,(0.5,0.5));
 	// Risk of Rain-Style Ability Counter
-	DrawString(yggdraFontShadow,"3",(320,-86),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_LEFT,Font.CR_Orange,1.0,-1,4,(1.0,1.0));
-	int grenadeXOffset = 345;
+	DrawString(yggdraFontShadow,"3",(328,-86),DI_SCREEN_LEFT_BOTTOM|DI_TEXT_ALIGN_CENTER,Font.CR_Orange,1.0,-1,4,(1.0,1.0));
+	abilityXOffset = 345;
 	for (int GBindex = 0; GBindex < 3; ++GBindex) {
-		DrawBar("AMGCDON","AMGCDOFF",1.0,1.0,(grenadeXOffset,-33),0,3,DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.75);
-		grenadeXOffset += 24;
+		DrawBar("AMGCDON","AMGCDOFF",1.0,1.0,(abilityXOffset,-33),0,3,DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM,0.75);
+		abilityXOffset += 24;
 	}
 	
 	}
