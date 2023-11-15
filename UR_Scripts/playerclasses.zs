@@ -1,6 +1,6 @@
 //	The custom base for the player classes.
 //	Defines custom properties that the original PlayerPawn doesn't have.
-class URPlayer : DoomPlayer
+class URPlayer : DoomPlayer abstract
 {
 	int shieldMax;				//	Maximum Shield Points
 	double shieldRechargeRate;	//	Shield Recharge Rate, as a % of max shields per second.
@@ -14,7 +14,10 @@ class URPlayer : DoomPlayer
 	property apBase : armorBase;
 	property apMax : armorMax;
 	property npMax : nanitePool;
-	
+
+	abstract void DoAbilityOne();
+	abstract void DoAbilityTwo();
+
 	Default
 	{
 		URPlayer.spMax 		25;
@@ -39,6 +42,19 @@ class ProtoPossPawn : URPlayer
 		URPlayer.apBase			15;
 		URPlayer.apMax			150;
 		URPlayer.npMax			150;
+
+		Player.StartItem		"ConcussionGrenadeItem";
+	}
+
+	override void DoAbilityOne ()
+	{
+		Inventory grenade = self.FindInventory("ConcussionGrenadeItem");
+		grenade.Use(false);
+	}
+
+	override void DoAbilityTwo ()
+	{
+		//self.A_FireProjectile("Grenade", 0, true, 2, 0, 0, -6.328125);
 	}
 }
 //	Alt class, as a contrast, for testing purposes.
@@ -57,5 +73,15 @@ class CommandoPawn : URPlayer
 		URPlayer.apBase			35;
 		URPlayer.apMax			300;
 		URPlayer.npMax			200;
+	}
+
+	override void DoAbilityOne ()
+	{
+		//self.A_FireProjectile("Grenade", 0, true, 2, 0, 0, -6.328125);
+	}
+
+	override void DoAbilityTwo ()
+	{
+		//self.A_FireProjectile("Grenade", 0, true, 2, 0, 0, -6.328125);
 	}
 }
