@@ -1,0 +1,4 @@
+AddKeySection "Odysseus Rising" OdysseusRisingKeyBinds
+AddMenuKey "Ability 1" "netevent ability1"
+AddMenuKey "Ability 2" "netevent ability2"
+DefaultBind G "netevent ability1"
