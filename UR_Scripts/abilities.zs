@@ -9,10 +9,8 @@ class AbilityEventHandler : EventHandler
 		let player = URPlayer(players[e.Player].mo);
 
 		if (e.Name == "ability1") {
-			Console.Printf("got event");
 			player.DoAbilityOne();
 		} else if (e.Name == "ability2") {
-			Console.Printf("got event 2!");
 			player.DoAbilityTwo();
 		};
 	}

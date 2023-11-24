@@ -52,9 +52,25 @@ class ProtoPossPawn : URPlayer
 		grenade.Use(false);
 	}
 
+	// If you change this, make sure to keep the .0 at the end, it's important
+	const DODGE_SPEED = 15.0;
 	override void DoAbilityTwo ()
 	{
-		//self.A_FireProjectile("Grenade", 0, true, 2, 0, 0, -6.328125);
+		let buttons = self.player.cmd.buttons;
+		S_StartSound("*grunt", CHAN_VOICE, CHANF_UI|CHANF_NOPAUSE, 1.0);
+		// Actor.Thrust(double speed, double angle)
+		if(buttons & BT_MOVELEFT) {
+			self.Thrust(DODGE_SPEED, self.angle+90);
+		}
+		if(buttons & BT_MOVERIGHT) {
+			self.Thrust(DODGE_SPEED, self.angle-90);
+		}
+		if(buttons & BT_FORWARD) {
+			self.Thrust(DODGE_SPEED, self.angle);
+		}
+		if(buttons & BT_BACK) {
+			self.Thrust(DODGE_SPEED, self.angle+180);
+		}
 	}
 }
 //	Alt class, as a contrast, for testing purposes.
