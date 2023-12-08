@@ -8,12 +8,14 @@ class URPlayer : DoomPlayer abstract
 	int	armorBase;				//	Base armor value, defines inherent damage reduction to health.
 	int armorMax;				//	Max armor value. Multiples of 5 values are recommended, but not necessary.
 	int nanitePool;				//	The maximum amount of Nanite Points that a class can hold at a time.
+	int naniteDelay;			//	The delay between sustaining health damage and the nanites kicking in.
 	property spMax : shieldMax;
 	property spRate : shieldRechargeRate;
 	property spDelay : shieldRechargeDelay;
 	property apBase : armorBase;
 	property apMax : armorMax;
 	property npMax : nanitePool;
+	property npDelay : naniteDelay;
 
 	abstract void DoAbilityOne();
 	abstract void DoAbilityTwo();
@@ -26,6 +28,7 @@ class URPlayer : DoomPlayer abstract
 		URPlayer.apBase		15;
 		URPlayer.apMax		150;
 		URPlayer.npMax		100;
+		URPlayer.npDelay	84;
 	}
 }
 //	The main character, strong shields, bigger nanite pool, lower health and armor.
@@ -42,7 +45,11 @@ class ProtoPossPawn : URPlayer
 		URPlayer.apBase			15;
 		URPlayer.apMax			150;
 		URPlayer.npMax			150;
+		URPlayer.npDelay		84;
 
+		Player.startItem		"Pistol";
+		Player.startItem		"Clip", 50;
+		Player.startItem		"Fist";
 		Player.StartItem		"ConcussionGrenadeItem";
 	}
 
@@ -89,6 +96,12 @@ class CommandoPawn : URPlayer
 		URPlayer.apBase			35;
 		URPlayer.apMax			300;
 		URPlayer.npMax			200;
+		URPlayer.npDelay		56;
+		
+		
+		Player.startItem		"Fist";
+		Player.startItem		"Pistol";
+		Player.startItem		"Clip", 50;
 	}
 
 	override void DoAbilityOne ()

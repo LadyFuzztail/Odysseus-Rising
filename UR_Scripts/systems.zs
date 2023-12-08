@@ -9,6 +9,24 @@ class StartItemHandler : EventHandler
 			e.thing.GiveInventory("NaniteControl",1);
 		if (e.thing.player && !e.thing.FindInventory("ArmorControl"))
 			e.thing.GiveInventory("ArmorControl",1);
+//		if (e.thing.player && !e.thing.FindInventory("AbilityControl"))
+//			e.thing.GiveInventory("AbilityControl",1);
+	}
+	
+	override void WorldLoaded(WorldEvent e)
+	{
+		for (int index = 0; index < MAXPLAYERS; ++index) {
+			if (!PlayerInGame[index])
+				continue;
+				
+			let pmo = players[index].mo;
+			if (!pmo)
+				continue;
+			
+			if ( !pmo.FindInventory("NaniteGate") )
+				pmo.GiveInventory("NaniteGate",1);
+				pmo.A_StartSound("player/nanite/gateon",0);
+		}
 	}
 }
 // 	Shield system main control class.
@@ -229,6 +247,7 @@ class NaniteControl : Inventory
 	double		healRate;
 	double		multiplier;
 	double		healTics;
+	int			healCD;
 	bool		crisisMode;
 	int			crisisTimer;
 	
@@ -265,8 +284,20 @@ class NaniteControl : Inventory
 	}
 	
 	void TickNanite()
-	{
+	{		
+		if (healCD > -1)
+			--healCD;
+		if (healCD == 0)
+			owner.A_StartSound("player/nanite/gateon",0);
 		if (plr) {
+			if (owner.player.health == 1 && !!owner.FindInventory("NaniteGate")) {
+					owner.TakeInventory("NaniteGate",1);
+					owner.A_StartSound("player/nanite/crisis",0);
+					crisisMode = true;
+					healCD = 0;
+			}
+		}
+		if (plr && healCD <= 0) {
 			multiplier = 1. + (0.01 * owner.CountInv("NanitePoints"));
 			if (owner.player.health >= MAX((0.25 * owner.GetMaxHealth(true)),25)) {
 				crisisMode = false;
@@ -287,15 +318,17 @@ class NaniteControl : Inventory
 				owner.GiveBody(1,owner.GetMaxHealth(true));
 				owner.TakeInventory("NanitePoints",1);
 			}
-			if ((owner.player.health >= MIN(100,owner.GetMaxHealth(true))) && !owner.FindInventory("NaniteGate")) {
+			if ((owner.CountInv("NanitePoints") >= plr.nanitePool) && !owner.FindInventory("NaniteGate")) {
 				owner.GiveInventory("NaniteGate",1);
 				owner.A_StartSound("player/nanite/gateon",0);
 			}
-			if (owner.player.health == 1 && !!owner.FindInventory("NaniteGate")) {
-				owner.TakeInventory("NaniteGate",1);
-				owner.A_StartSound("player/nanite/crisis",0);
-				crisisMode = true;
-			}
+		}
+	}
+	
+	override void AbsorbDamage(int damage, Name damageType, out int newdamage, Actor inflictor, Actor source,int flags)
+	{	
+		if (damage > 0) {
+			healCD = plr.naniteDelay;
 		}
 	}
 }
@@ -518,3 +551,5 @@ class CombatRank : Inventory
 		+Inventory.KeepDepleted
 	}
 }
+
+// Create a Class to handle abilities.
